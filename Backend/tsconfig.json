@@ -12,6 +12,10 @@
       "experimentalDecorators": true,
       "sourceMap": true,
       "esModuleInterop": true,
+      "types": [
+         "node",
+         "express"
+      ],
       "allowSyntheticDefaultImports": true
    },
    "include": [
