@@ -1,9 +1,9 @@
 import express from "express";
-import { sendOtp } from "../controllers/otpController";
+import { resendOtp, verifyOtp } from "../controllers/otpController";
 
 const router = express.Router();
 
-// @ts-ignore - Temporarily ignore TypeScript errors
-router.post("/send-otp", sendOtp);
+router.post("/resend-otp", resendOtp);
+router.post("/verify-otp", verifyOtp);
 
 export default router;

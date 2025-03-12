@@ -1,87 +1,105 @@
-import argon2 from "argon2";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { AppDataSource } from "../initializers/data-source";
 import { User } from "../models/User";
+// import { Otp } from "../models/Otp";
+// import { AppDataSource } from "../initializers/data-source";
+import { validateEmail, validatePassword } from "../utils/validators";
+import { generateAndSendOtp } from "../utils/generateAndSendOtp";
+import { JWT_SECRET, JWT_EXPIRES_IN } from "../initializers/jwtInitializers";
 
-const userRepo = AppDataSource.getRepository(User);
+// const otpRepo = AppDataSource.getRepository(Otp);
 
-// Register User
-export const register = async (req: Request, res: Response) => {
-  const { firstname, lastname, email, password, role } = req.body;
+export const login = async (req: Request, res: Response): Promise<any> => {
   try {
-    // Check if user exists
-    const userExist = await userRepo.findOne({ where: { email: email } });
-    if (userExist) {
-      return res.status(400).json({ message: "User already exists" });
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Validate password strength
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})/;
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
+    if (!user.isVerified) {
+      return res.status(404).json({
         message:
-          "Password must be at least 6 characters long, include a number, and a special character",
+          "User hasn't been verified. Please register again and verify OTP.",
       });
     }
 
-    // Hash the password
-    const hashedPassword = await argon2.hash(password);
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-    // Insert user into database
-    const user = userRepo.create({
-      firstName: firstname,
-      lastName: lastname,
-      email: email,
-      password: hashedPassword,
-      role: role || "user",
-    });
+    const token = jwt.sign(
+      { id: user.id, email: user.email, name: user.name },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRES_IN,
+      },
+    );
 
-    await userRepo.save(user); //Save the above model
-
-    res.status(201).json({
-      message: "User created successfully",
-      user: user,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    return res.json({ token });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
-// Login verify
-export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  try {
-    // Check if user exists
-    const user = await userRepo.findOne({ where: { email: email } });
-    if (!user) {
-      return res.status(400).json({ message: "This email doesn't exist." });
-    }
+// Register new user
+export const register = async (req: Request, res: Response): Promise<any> => {
+  const { name, email, password, confirm_password } = req.body;
 
-    // check password
-    const isMatch = await argon2.verify(user.password, password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid password" });
-    }
+  // Validate confirm_password
+  if (password !== confirm_password) {
+    return res.status(400).json({ message: "Passwords do not match." });
+  }
 
-    // generate JWT token
-    const token = jwt.sign(
-      {
-        userId: user.userId,
-        role: user.role,
-        username: user.firstName,
-      },
-      process.env.JWT_SECRET,
-      // { expiresIn: "1h" },
-    );
+  //Validate the email and password
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format." });
+  }
 
-    res.json({
-      message: "Login successful",
-      token,
+  if (!validatePassword(password)) {
+    return res.status(400).json({
+      message:
+        "Password must be at least 6 characters long, contain an uppercase letter, a number, and a special character.",
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+  }
+
+  try {
+    //Check if the user already exists
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (existingUser) {
+      if (existingUser.isVerified) {
+        // If user exists and is verified, return error for login
+        return res
+          .status(400)
+          .json({ message: "User already exists. Please proceed with login." });
+      } else {
+        // If user exists but not verified, update user details
+        existingUser.name = name;
+        existingUser.password = password; // Password will be hashed automatically
+
+        await existingUser.save();
+        await generateAndSendOtp(email);
+
+        return res.status(200).json({ message: "User updated successfully!" });
+      }
+    }
+
+    //Create and save the new user
+    const user = new User();
+    user.name = name;
+    user.email = email;
+    user.password = password; // Password is hashed automatically in the User entity
+
+    await user.save();
+    await generateAndSendOtp(email);
+
+    return res.status(201).json({ message: "User registered successfully!" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };

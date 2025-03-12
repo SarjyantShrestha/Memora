@@ -1,47 +1,81 @@
 import { Request, Response } from "express";
-import { sendOtpEmail } from "../initializers/emailService"; // Import the email service
-import { AppDataSource } from "../initializers/data-source";
 import { Otp } from "../models/Otp";
+import { User } from "../models/User";
+import { generateAndSendOtp } from "../utils/generateAndSendOtp";
+import { validateEmail } from "../utils/validators";
+import { AppDataSource } from "../initializers/data-source";
 
 const otpRepo = AppDataSource.getRepository(Otp);
 
-// Function to generate a random 6-digit OTP
-const generateOtp = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+// Resend OTP function
+export const resendOtp = async (req: Request, res: Response): Promise<any> => {
+  const { email } = req.body;
 
-export const sendOtp = async (req: Request, res: Response) => {
-  const { email } = req.body; // Get email from request body
-
-  if (!email) {
-    return res.status(400).json({ message: "Email is required" });
+  // Check if the email is valid
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format." });
   }
 
-  const otpCode = generateOtp();
-  const expiryDate = new Date(Date.now() + 10 * 60 * 1000); // OTP expires in 10 minutes
-
   try {
-    // Check if user already has an OTP
-    let userOtp = await otpRepo.findOne({ where: { userEmail: email } });
+    // Check if the user exists
+    const user = await User.findOne({ where: { email } });
 
-    if (userOtp) {
-      // Update existing OTP
-      userOtp.otpCode = otpCode;
-      userOtp.expiryDate = expiryDate;
-    } else {
-      // Create a new OTP entry
-      userOtp = otpRepo.create({ userEmail: email, otpCode, expiryDate });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Save OTP to database
-    await otpRepo.save(userOtp);
+    // Generate and send OTP (will either update or create a new OTP)
 
-    // Send OTP via email
-    await sendOtpEmail(email, otpCode);
+    const response = await generateAndSendOtp(email);
 
-    return res.status(200).json({ message: "OTP sent successfully" });
+    return res.status(200).json(response);
   } catch (error) {
-    console.error("Error sending OTP:", error);
-    return res.status(500).json({ message: "Error sending OTP" });
+    console.error("Error resending OTP:", error);
+    return res.status(500).json({ message: "Error resending OTP" });
+  }
+};
+
+export const verifyOtp = async (req: Request, res: Response): Promise<any> => {
+  const { email, otp } = req.body;
+
+  try {
+    // Check if OTP is provided
+    if (!otp) {
+      return res.status(400).json({ message: "OTP not provided" });
+    }
+
+    // Retrieve the OTP for the given email
+    const userOtp = await otpRepo.findOne({ where: { email } });
+
+    // Check if user OTP exists
+    if (!userOtp) {
+      return res.status(404).json({ message: "OTP not found for this email" });
+    }
+
+    const currentTime = new Date();
+
+    // Check if OTP is expired
+    if (userOtp.expiryDate < currentTime) {
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    // Check if OTP matches
+    if (otp.toString() !== userOtp.otpCode) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    // OTP is valid, update user verification status
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    return res.status(200).json({ message: "OTP verified successfully" });
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -6,13 +6,13 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-@Entity("otp") // The name of the table in the database will be "otp"
+@Entity()
 export class Otp {
   @PrimaryGeneratedColumn() // Auto-generated unique ID for each OTP
   id: number;
 
   @Column() // Store the user's email address
-  userEmail: string;
+  email: string;
 
   @Column() // Store the OTP code that is generated and sent to the user
   otpCode: string;

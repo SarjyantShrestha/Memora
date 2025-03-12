@@ -12,6 +12,7 @@
       "experimentalDecorators": true,
       "sourceMap": true,
       "esModuleInterop": true,
+      "skipLibCheck": true,
       "types": [
          "node",
          "express"
