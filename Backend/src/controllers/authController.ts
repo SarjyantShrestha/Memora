@@ -11,6 +11,7 @@ import {
   JWT_REFRESH_SECRET,
   JWT_REFRESH_EXPIRES_IN,
 } from "../initializers/jwtInitializers";
+import bcrypt from "bcrypt";
 
 // const otpRepo = AppDataSource.getRepository(Otp);
 
@@ -29,8 +30,9 @@ export const login = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log("password didn't match");
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
@@ -149,7 +151,7 @@ export const register = async (req: Request, res: Response): Promise<any> => {
     const user = new User();
     user.name = name;
     user.email = email;
-    user.password = password; // Password is hashed automatically in the User entity
+    user.password = await bcrypt.hash(password, 10);
 
     await user.save();
     await generateAndSendOtp(email);
