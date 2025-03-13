@@ -108,6 +108,12 @@ export const refreshToken = async (
 export const register = async (req: Request, res: Response): Promise<any> => {
   const { name, email, password, confirm_password } = req.body;
 
+  //Check existing username
+  const existingName = await User.findOne({ where: { name } });
+  if (existingName) {
+    return res.status(400).json({ message: "User already taken" });
+  }
+
   // Validate confirm_password
   if (password !== confirm_password) {
     return res.status(400).json({ message: "Passwords do not match." });
