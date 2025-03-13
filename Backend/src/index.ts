@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import { AppDataSource } from "./initializers/data-source";
 import OtpRouter from "./routes/otpRoute";
@@ -9,6 +10,7 @@ const port: number = 5000;
 const app = express();
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

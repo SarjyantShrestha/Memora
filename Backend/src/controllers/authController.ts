@@ -83,21 +83,23 @@ export const refreshToken = async (
       return res.status(401).json({ message: "Refresh Token required" });
     }
 
-    //verify refresh token
-    jwt.verify(refreshToken, JWT_REFRESH_SECRET, (err: any, decoded: any) => {
-      if (err) {
-        return res.status(403).json({ message: "Invalid refresh token" });
-      }
-      // Generate new access token
-      const newAccessToken = jwt.sign(
-        { id: decoded.id, email: decoded.email },
-        JWT_SECRET,
-        { expiresIn: JWT_EXPIRES_IN },
-      );
+    // Verify refresh token
+    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as any;
 
-      return res.json({ accessToken: newAccessToken });
-    });
-  } catch (error) {}
+    // Generate new access token
+    const newAccessToken = jwt.sign(
+      { id: decoded.id, email: decoded.email },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN },
+    );
+
+    return res.json({ accessToken: newAccessToken });
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    return res
+      .status(403)
+      .json({ message: "Invalid or expired refresh token" });
+  }
 };
 
 // Register new user
