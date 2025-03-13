@@ -5,7 +5,12 @@ import { User } from "../models/User";
 // import { AppDataSource } from "../initializers/data-source";
 import { validateEmail, validatePassword } from "../utils/validators";
 import { generateAndSendOtp } from "../utils/generateAndSendOtp";
-import { JWT_SECRET, JWT_EXPIRES_IN } from "../initializers/jwtInitializers";
+import {
+  JWT_SECRET,
+  JWT_EXPIRES_IN,
+  JWT_REFRESH_SECRET,
+  JWT_REFRESH_EXPIRES_IN,
+} from "../initializers/jwtInitializers";
 
 // const otpRepo = AppDataSource.getRepository(Otp);
 
@@ -29,7 +34,8 @@ export const login = async (req: Request, res: Response): Promise<any> => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign(
+    // Generate access and refresh tokens
+    const accessToken = jwt.sign(
       { id: user.id, email: user.email, name: user.name },
       JWT_SECRET,
       {
@@ -37,12 +43,61 @@ export const login = async (req: Request, res: Response): Promise<any> => {
       },
     );
 
-    return res.json({ token });
+    const refreshToken = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+      JWT_REFRESH_SECRET,
+      {
+        expiresIn: JWT_REFRESH_EXPIRES_IN,
+      },
+    );
+
+    // Store refresh token in an httpOnly cookie (more secure)
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true, // true in production
+      sameSite: "strict",
+      path: "/api/auth/refresh-token",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return res.json({ accessToken });
   } catch (error) {
     return res
       .status(500)
       .json({ message: "Server error", error: error.message });
   }
+};
+
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+): Promise<any> => {
+  try {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "Refresh Token required" });
+    }
+
+    //verify refresh token
+    jwt.verify(refreshToken, JWT_REFRESH_SECRET, (err: any, decoded: any) => {
+      if (err) {
+        return res.status(403).json({ message: "Invalid refresh token" });
+      }
+      // Generate new access token
+      const newAccessToken = jwt.sign(
+        { id: decoded.id, email: decoded.email },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN },
+      );
+
+      return res.json({ accessToken: newAccessToken });
+    });
+  } catch (error) {}
 };
 
 // Register new user

@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api/otp", OtpRouter);
-app.use("/api/user", AuthRoutes);
+app.use("/api/auth", AuthRoutes);
 
 AppDataSource.initialize()
   .then(() => {
