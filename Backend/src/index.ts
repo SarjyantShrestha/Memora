@@ -7,6 +7,7 @@ import { verifyToken } from "./middleware/verifyToken";
 import OtpRouter from "./routes/otpRoutes";
 import AuthRoutes from "./routes/authRoutes";
 import CategoryRoutes from "./routes/categoryRoutes";
+import NoteRoutes from "./routes/noteRoutes";
 
 const port: number = 5000;
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/otp", OtpRouter); // OTP routes
 app.use("/api/auth", AuthRoutes); // Auth routes
 app.use("/api/category", CategoryRoutes); // Category routes
+app.use("/api/notes", NoteRoutes); // Category routes
 
 // Protected route
 app.get("/protected", verifyToken, (req: Request, res: Response): any => {

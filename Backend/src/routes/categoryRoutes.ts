@@ -9,7 +9,7 @@ import {
   createCategoryValidation,
   updateCategoryValidation,
   deleteCategoryValidation,
-} from "../utils/validators";
+} from "../utils/validators/categoryValidators";
 import { verifyToken } from "../middleware/verifyToken";
 
 const router = Router();

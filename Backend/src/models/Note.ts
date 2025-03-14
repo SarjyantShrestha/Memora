@@ -24,7 +24,7 @@ export class Note extends BaseEntity {
   content: string;
 
   // Many-to-one relationship with User (each note belongs to a user)
-  @ManyToOne(() => User, (user) => user.notes)
+  @ManyToOne(() => User, (user) => user.notes, { onDelete: "CASCADE" })
   user: User;
 
   // Many-to-many relationship with Category (a note can belong to multiple categories)
