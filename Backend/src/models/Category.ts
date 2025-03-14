@@ -26,7 +26,6 @@ export class Category extends BaseEntity {
 
   // Many-to-many relationship with Note (a category can contain many notes)
   @ManyToMany(() => Note, (note) => note.categories)
-  @JoinTable() // join table for the many-to-many relationship
   notes: Note[];
 
   @CreateDateColumn()

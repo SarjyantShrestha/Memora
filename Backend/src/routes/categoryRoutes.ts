@@ -30,28 +30,6 @@ router.delete(
 );
 
 export default router;
-
-/**
- * @swagger
- * tags:
- *   - Categories
- * /api/v1/categories:
- *   get:
- *     summary: Get all categories for a user
- *     description: Fetches all categories for the authenticated user.
- *     tags:
- *       - Categories
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: List of categories retrieved successfully
- *       400:
- *         description: No categories found
- *       500:
- *         description: Internal server error
- */
-
 /**
  * @swagger
  * /api/v1/categories:
@@ -78,6 +56,27 @@ export default router;
  *         description: Category created successfully
  *       400:
  *         description: Invalid category data
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   - Categories
+ * /api/v1/categories:
+ *   get:
+ *     summary: Get all categories for a user
+ *     description: Fetches all categories for the authenticated user.
+ *     tags:
+ *       - Categories
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of categories retrieved successfully
+ *       400:
+ *         description: No categories found
  *       500:
  *         description: Internal server error
  */

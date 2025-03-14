@@ -35,6 +35,24 @@ export const getAllNotesValidation = [
     .isIn(["ASC", "DESC"])
     .withMessage("OrderBy must be 'ASC' or 'DESC'.")
     .default("DESC"),
+
+  query("category")
+    .optional()
+    .isString()
+    .withMessage("Category must be a string."),
+
+  query("page")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Page must be an integer greater than or equal to 1.")
+    .default(1),
+
+  query("limit")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Limit must be an integer greater than or equal to 1.")
+    .default(10),
+
   validateRequest,
 ];
 

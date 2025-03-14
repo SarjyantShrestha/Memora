@@ -75,7 +75,13 @@ export const login = async (req: Request, res: Response) => {
 
 //Register user with validation
 export const register = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, confirm_password } = req.body;
+  //
+  // Check if password and confirm_password match
+  if (password !== confirm_password) {
+    res.status(400).json({ message: "Passwords do not match." });
+    return;
+  }
 
   //Check existing username
   const existingName = await User.findOne({ where: { name } });
@@ -98,7 +104,7 @@ export const register = async (req: Request, res: Response) => {
       } else {
         // If user exists but not verified, update user details
         existingUser.name = name;
-        existingUser.password = password; // Password will be hashed automatically
+        existingUser.password = await bcrypt.hash(password, 10);
 
         await existingUser.save();
         await generateAndSendOtp(email);

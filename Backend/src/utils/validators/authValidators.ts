@@ -26,9 +26,6 @@ export const registerValidation = [
     .withMessage("Password must contain at least one number.")
     .matches(/[\W_]/)
     .withMessage("Password must contain at least one special character."),
-  body("confirm_password")
-    .custom((value, { req }) => value === req.body.password)
-    .withMessage("Passwords do not match."),
   validateRequest,
 ];
 
