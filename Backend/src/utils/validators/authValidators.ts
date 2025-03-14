@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+import { validateRequest } from "../validateRequest";
 
 // Register Validation
 export const registerValidation = [

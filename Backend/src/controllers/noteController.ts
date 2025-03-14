@@ -110,7 +110,11 @@ export const updateNote = async (req: Request, res: Response) => {
     note.content = content || note.content;
 
     if (categoryIds) {
-      const categories = await Category.findByIds(categoryIds);
+      const categories = await Category.find({
+        where: {
+          id: In(categoryIds), // Use `In` to match the categoryIds array
+        },
+      });
       note.categories = categories;
     }
 

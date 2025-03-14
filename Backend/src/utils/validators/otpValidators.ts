@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { validateRequest } from "./authValidators";
+import { validateRequest } from "../validateRequest";
 
 // Email validation
 export const emailValidation = [

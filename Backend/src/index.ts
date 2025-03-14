@@ -2,6 +2,9 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+import swaggerUi from "swagger-ui-express";
+import { setupSwagger, swaggerSpec } from "./utils/swagger";
+
 import { AppDataSource } from "./initializers/data-source";
 import { verifyToken } from "./middleware/verifyToken";
 import OtpRouter from "./routes/otpRoutes";
@@ -18,11 +21,17 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Set up Swagger documentation
+setupSwagger(app);
+
 // Routes setup
-app.use("/api/otp", OtpRouter); // OTP routes
-app.use("/api/auth", AuthRoutes); // Auth routes
-app.use("/api/category", CategoryRoutes); // Category routes
-app.use("/api/notes", NoteRoutes); // Category routes
+app.use("/api/v1/otp", OtpRouter); // OTP routes
+app.use("/api/v1/auth", AuthRoutes); // Auth routes
+app.use("/api/v1/categories", CategoryRoutes); // Category routes
+app.use("/api/v1/notes", NoteRoutes); // Category routes
+
+// Serve Swagger UI docs
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Protected route
 app.get("/protected", verifyToken, (req: Request, res: Response): any => {

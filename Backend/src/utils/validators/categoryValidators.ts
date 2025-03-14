@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { validateRequest } from "./authValidators";
+import { validateRequest } from "../validateRequest";
 
 // Create Category Validation
 export const createCategoryValidation = [

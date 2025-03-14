@@ -1,5 +1,5 @@
 import { body, query, param } from "express-validator";
-import { validateRequest } from "./authValidators";
+import { validateRequest } from "../validateRequest";
 
 export const createNoteValidation = [
   body("title")
