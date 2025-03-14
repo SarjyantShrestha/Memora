@@ -4,8 +4,9 @@ import cookieParser from "cookie-parser";
 
 import { AppDataSource } from "./initializers/data-source";
 import { verifyToken } from "./middleware/verifyToken";
-import OtpRouter from "./routes/otpRoute";
+import OtpRouter from "./routes/otpRoutes";
 import AuthRoutes from "./routes/authRoutes";
+import CategoryRoutes from "./routes/categoryRoutes";
 
 const port: number = 5000;
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes setup
 app.use("/api/otp", OtpRouter); // OTP routes
 app.use("/api/auth", AuthRoutes); // Auth routes
+app.use("/api/category", CategoryRoutes); // Category routes
 
 // Protected route
 app.get("/protected", verifyToken, (req: Request, res: Response): any => {

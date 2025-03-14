@@ -4,8 +4,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
   BaseEntity,
 } from "typeorm";
+import { Category } from "./Category";
+import { Note } from "./Note";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -24,6 +27,14 @@ export class User extends BaseEntity {
   // Whether user has verified OTP
   @Column({ type: "boolean", default: false })
   isVerified: boolean;
+
+  // One-to-many relationship with Category
+  @OneToMany(() => Category, (category) => category.user)
+  categories: Category[];
+
+  // One-to-many relationship with Note
+  @OneToMany(() => Note, (note) => note.user)
+  notes: Note[];
 
   @CreateDateColumn()
   createdAt: Date;
