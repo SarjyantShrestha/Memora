@@ -50,6 +50,8 @@ export default router;
  *                 items:
  *                   type: integer
  *                   example: [1, 2]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       201:
  *         description: Note created successfully
@@ -81,6 +83,8 @@ export default router;
  *           type: string
  *           enum: [ASC, DESC]
  *           example: "DESC"
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of notes retrieved successfully
@@ -103,6 +107,8 @@ export default router;
  *         schema:
  *           type: integer
  *           example: 1
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Note retrieved successfully
@@ -145,6 +151,8 @@ export default router;
  *                 items:
  *                   type: integer
  *                   example: [1, 2]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Note updated successfully
@@ -169,6 +177,8 @@ export default router;
  *         schema:
  *           type: integer
  *           example: 1
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Note deleted successfully

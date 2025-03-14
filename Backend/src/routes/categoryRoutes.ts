@@ -41,6 +41,8 @@ export default router;
  *     description: Fetches all categories for the authenticated user.
  *     tags:
  *       - Categories
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of categories retrieved successfully
@@ -69,6 +71,8 @@ export default router;
  *                 type: string
  *                 description: The name of the category to be created
  *                 example: "Technology"
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       201:
  *         description: Category created successfully
@@ -105,6 +109,8 @@ export default router;
  *                 type: string
  *                 description: The new name for the category
  *                 example: "Updated Category Name"
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Category updated successfully
@@ -130,6 +136,8 @@ export default router;
  *         schema:
  *           type: integer
  *           example: 1
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Category deleted successfully

@@ -79,6 +79,8 @@ export default router;
  *     description: Refreshes the access token using a valid refresh token
  *     tags:
  *       - Users
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Access token refreshed successfully
