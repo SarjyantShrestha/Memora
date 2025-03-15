@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { api } from "../config/axios";
@@ -40,25 +40,42 @@ const Signup = () => {
         throw new Error("Registration failed");
       }
     } catch (error: any) {
-      if (error.response && error.response.data.errors) {
-        const errorMessages = error.response.data.errors.map(
-          (err: any) => err.msg,
-        );
-        setBackendErrors(errorMessages); // Set backend errors
+      if (error.response) {
+        // If the error is coming from the backend response
+        const errorMessage = error.response.data.message;
+        if (errorMessage) {
+          setBackendErrors([errorMessage]); // Set specific error message from backend
+        } else {
+          setBackendErrors(["An unknown error occurred."]); // If no message is returned
+        }
+      } else if (error.message) {
+        setBackendErrors([error.message]); // If it's a general error
       }
       console.error("Error during registration:", error);
     } finally {
-      setLoading(false); // Stop loading after the request
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (backendErrors.length > 0) {
+      const timer = setTimeout(() => {
+        setBackendErrors([]); // Clear errors after 3 seconds
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [backendErrors]);
 
   return (
     <>
       {/* Error Bar at the top */}
       {backendErrors.length > 0 && (
-        <div className="bg-red-500 text-white p-4 text-center font-semibold">
+        <div className="absolute w-full bg-red-500 text-white text-center">
           {backendErrors.map((error, index) => (
-            <div key={index}>{error}</div>
+            <div key={index} className="py-2">
+              {error}
+            </div>
           ))}
         </div>
       )}
