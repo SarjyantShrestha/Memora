@@ -1,9 +1,12 @@
 export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       fontFamily: {
-        roboto: ["Roboto"],
+        outfit: ["Outfit", "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
     },
   },
+  plugins: [],
 };

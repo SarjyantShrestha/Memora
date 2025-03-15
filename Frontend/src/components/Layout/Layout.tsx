@@ -18,8 +18,7 @@ const Layout = () => {
   };
 
   return (
-    <div className="relative h-screen w-screen bg-white overflow-y-hidden flex font-roboto">
-      {/* Sidebar */}
+    <div className="relative h-screen w-screen bg-white overflow-y-hidden flex overflow-x-hidden">
       <div className="w-64 bg-white py-8 pr-8 pl-4 text-gray-400 flex flex-col relative h-full ">
         <h2 className="text-3xl font-semibold mb-14 text-black uppercase text-center">
           Memora
@@ -27,35 +26,35 @@ const Layout = () => {
 
         {/* Menu List */}
         <ul className="flex-grow space-y-2">
-          <li className="flex text-black cursor-pointer p-2 rounded-r-full hover:bg-gray-100 transition-colors">
-            <div className="flex items-center ml-6">
+          <li className="flex text-black cursor-pointer p-2 rounded-r-full hover:bg-gray-100">
+            <div className="flex items-center ml-6 ">
               <NotebookPen className="h-5 w-5 mr-3 text-amber-500" />
               <span className="font-medium">Add Note</span>
             </div>
           </li>
 
           <li
-            className="flex justify-between text-black cursor-pointer p-2 rounded-r-full hover:bg-gray-100 transition-colors"
+            className="flex justify-between text-black cursor-pointer p-2 rounded-r-full"
             onClick={toggleCategoryExpand}
           >
-            <div className="flex items-center ml-6">
+            <div className="flex justify-center items-center ml-6">
               <FolderClosed className="h-5 w-5 mr-3 text-amber-500" />
               <span className="font-medium">Category</span>
+              {isCategoryExpanded ? (
+                <ChevronDown className="h-4 w-4 ml-2" />
+              ) : (
+                <ChevronRight className="h-4 w-4 ml-2" />
+              )}
             </div>
-            {isCategoryExpanded ? (
-              <ChevronDown className="h-4 w-4 mr-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4 mr-4" />
-            )}
           </li>
 
           {/* Category Tree List - Only visible when expanded */}
           {isCategoryExpanded && (
-            <ul className="pl-16 pr-4 text-gray-600 space-y-2">
+            <ul className="pl-14 pr-4 text-gray-600 space-y-2">
               {categories.map((category, index) => (
                 <li
                   key={index}
-                  className="flex items-center cursor-pointer p-1 rounded hover:bg-gray-100 transition-colors"
+                  className="flex items-center cursor-pointer p-1 rounded"
                 >
                   <Diamond className="h-4 w-4 mr-2 text-amber-400" />
                   <span>{category}</span>
