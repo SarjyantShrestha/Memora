@@ -4,6 +4,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { api } from "../config/axios";
 import { useAppContext } from "../context/Contexts";
 import { Loader2 } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
 
 type Inputs = {
   email: string;
@@ -14,8 +15,7 @@ const Login = () => {
   const [backendErrors, setBackendErrors] = useState<string[]>([]); // State to store backend errors
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const { setAccessToken } = useAppContext();
+  const { accessToken, setAccessToken, setName } = useAppContext();
 
   const {
     register,
@@ -34,6 +34,11 @@ const Login = () => {
         console.log(accessToken);
         setAccessToken(accessToken);
         localStorage.setItem("accessToken", accessToken);
+        //
+        // Decode the token and get user info
+        const decodedToken: any = jwtDecode(accessToken);
+        setName(decodedToken.name);
+
         setTimeout(() => {
           setLoading(false);
           navigate("/");
@@ -54,6 +59,13 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setAccessToken(token);
+    }
+  }, [accessToken, setAccessToken]);
+
   //Create backend error after 3 seconds
   useEffect(() => {
     if (backendErrors.length > 0) {
@@ -64,6 +76,18 @@ const Login = () => {
       return () => clearTimeout(timer);
     }
   }, [backendErrors]);
+
+  //Check if user is already logged in
+  useEffect(() => {
+    // Check if the access token is in localStorage
+    const token = localStorage.getItem("accessToken");
+
+    // If the token exists, set it in the context and redirect to the home page
+    if (token && !accessToken) {
+      setAccessToken(token);
+      navigate("/", { replace: true });
+    }
+  }, [accessToken, setAccessToken, navigate]);
 
   return (
     <>

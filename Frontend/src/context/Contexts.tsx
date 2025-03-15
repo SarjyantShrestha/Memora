@@ -5,6 +5,8 @@ import { authapi } from "../config/axios";
 // Define the context type
 interface ContextType {
   email: string;
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   accessToken: string | null;
   setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
@@ -24,6 +26,7 @@ interface ContextProviderProps {
 // Provider component
 export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false); // Track registration status
   const navigate = useNavigate();
@@ -53,8 +56,9 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     isRegistered,
     setIsRegistered,
     logout,
+    name,
+    setName,
   };
-
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 

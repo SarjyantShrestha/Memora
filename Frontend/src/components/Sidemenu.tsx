@@ -1,55 +1,58 @@
 import { useState } from "react";
-import { NotebookPen, Diamond, PlusCircle } from "lucide-react";
+import { NotebookPen, Diamond, FolderClosed, Plus, Filter } from "lucide-react";
 import Categories from "./Categories";
 import NoteModal from "./NoteModal";
+import { Hash } from "lucide-react";
 
 const SideMenu = () => {
-  const [opened, setOpened] = useState(false); // For opening/closing the modal
+  const [opened, setOpened] = useState(false);
   const [note, setNote] = useState({
     title: "",
     content: "",
     date: "",
     category: [],
-  }); // Empty note state for adding new notes
+  });
 
-  const handleCloseModal = () => setOpened(false); // Close the modal
-
+  const handleCloseModal = () => setOpened(false);
   const handleSaveNote = () => {
     console.log("New note saved:", note);
-    setOpened(false); // Close modal after saving
+    setOpened(false);
   };
 
   return (
-    <div className="flex flex-col">
-      {/* Add Note Button */}
-      <button
-        className="flex items-center bg-blue-500 text-white py-3 px-4 rounded-lg mb-6 hover:bg-blue-600 transition-colors duration-200 cursor-pointer"
-        onClick={() => {
-          setNote({
-            title: "",
-            content: "",
-            date: "",
-            category: [],
-          });
-          setOpened(true);
-        }}
-      >
-        <NotebookPen size={18} className="mr-2" />
-        <span className="font-medium">Add Note</span>
-      </button>
+    <div className="flex flex-col h-full w-64 py-6 px-4 overflow-hidden">
+      {/* Action Buttons */}
+      <div className="space-y-3 mb-8">
+        <button
+          className="flex items-center justify-center w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
+          onClick={() => {
+            setNote({
+              title: "",
+              content: "",
+              date: "",
+              category: [],
+            });
+            setOpened(true);
+          }}
+        >
+          <NotebookPen size={16} className="mr-2" />
+          <span className="font-medium">New Note</span>
+        </button>
 
-      {/* Categories Section Title*/}
-      <div className="flex justify-between items-center text-md font-medium mb-4 text-gray-600">
-        <span>CATEGORIES</span>
-        <PlusCircle
-          size={20}
-          className="text-gray-500 cursor-pointer hover:text-blue-600"
-        />
+        <button className="flex items-center justify-center w-full bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+          <FolderClosed size={16} className="mr-2" />
+          <span className="font-medium">New Category</span>
+        </button>
       </div>
 
-      {/* List of category*/}
-      <div className="flex-1 py-2 max-h-[calc(90vh-200px)] overflow-auto bg-gray-100 rounded-b-lg">
-        <Categories Icon={Diamond} />
+      {/* Categories Section */}
+      <div className="mb-3 flex justify-between items-center border-b border-gray-300 pb-2">
+        <h3 className="font-semibold text-sm text-gray-700">CATEGORIES</h3>
+      </div>
+
+      {/* Categories List */}
+      <div className="overflow-auto">
+        <Categories Icon={Hash} />
       </div>
 
       {/* Note Modal */}
