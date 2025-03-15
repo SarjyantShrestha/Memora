@@ -25,13 +25,9 @@ const Layout = () => {
             placeholder="Search notes..."
             leftSection={<Search size={20} />}
             size="md"
+            className="ml-auto"
           />
-          <Button
-            variant="outline"
-            color="red"
-            onClick={logout}
-            className="ml-4"
-          >
+          <Button color="red" onClick={logout} className="ml-auto">
             Logout
           </Button>
         </div>

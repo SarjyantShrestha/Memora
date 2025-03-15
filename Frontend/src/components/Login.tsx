@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { api } from "../config/axios";
 import { useAppContext } from "../context/Contexts";
+import { Loader2 } from "lucide-react";
 
 type Inputs = {
   email: string;
@@ -34,6 +35,7 @@ const Login = () => {
         setAccessToken(accessToken);
         localStorage.setItem("accessToken", accessToken);
         setTimeout(() => {
+          setLoading(false);
           navigate("/");
         }, 2000);
       }
@@ -49,8 +51,6 @@ const Login = () => {
       } else if (error.message) {
         setBackendErrors([error.message]); // If it's a general error
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -133,7 +133,14 @@ const Login = () => {
               type="submit"
               className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              Login
+              {loading ? (
+                <div className="flex justify-center">
+                  <Loader2 className="animate-spin mr-2" size={20} />{" "}
+                  {/* Spinner */}
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
