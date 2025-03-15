@@ -8,22 +8,25 @@ import Login from "./components/Login.tsx";
 import Signup from "./components/Signup.tsx";
 import Otp from "./components/Otp.tsx";
 import CardContainer from "./components/CardContainer.tsx";
+import ContextProvider from "./context/Contexts.tsx";
 
 const App = () => {
   return (
-    <MantineProvider>
-      <Routes>
-        {/* Public Routes*/}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/otp" element={<Otp />} />
+    <ContextProvider>
+      <MantineProvider>
+        <Routes>
+          {/* Public Routes*/}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/otp" element={<Otp />} />
 
-        {/* Private Routes (inside Layout) */}
-        <Route path="/" element={<Layout />}>
-          <Route index element={<CardContainer />} />
-        </Route>
-      </Routes>
-    </MantineProvider>
+          {/* Private Routes (inside Layout) */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<CardContainer />} />
+          </Route>
+        </Routes>
+      </MantineProvider>
+    </ContextProvider>
   );
 };
 
