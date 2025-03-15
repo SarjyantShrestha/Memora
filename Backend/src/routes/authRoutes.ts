@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { login, register, refreshToken } from "../controllers/authController";
+import {
+  login,
+  register,
+  refreshToken,
+  logout,
+} from "../controllers/authController";
 import {
   loginValidation,
   registerValidation,
@@ -9,6 +14,7 @@ const router = Router();
 
 router.post("/register", registerValidation, register);
 router.post("/login", loginValidation, login);
+router.post("/logout", logout);
 router.post("/refresh", refreshToken);
 
 export default router;
@@ -88,4 +94,19 @@ export default router;
  *         description: Access token refreshed successfully
  *       401:
  *         description: Refresh token required
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     description: Logs out the user by clearing the refresh token cookie.
+ *     tags:
+ *       - Users
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ *       401:
+ *         description: Unauthorized, invalid or missing refresh token
  */

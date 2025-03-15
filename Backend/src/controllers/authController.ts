@@ -65,7 +65,7 @@ export const login = async (req: Request, res: Response) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    res.json({ accessToken });
+    res.status(200).json({ accessToken });
     return;
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -157,4 +157,14 @@ export const refreshToken = async (req: Request, res: Response) => {
     console.error("Error refreshing token:", error);
     res.status(403).json({ message: "Invalid or expired refresh token" });
   }
+};
+
+//Logout User
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
 };

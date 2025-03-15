@@ -4,6 +4,7 @@ const baseURL = "http://127.0.0.1:5000/api/v1";
 
 export const api = axios.create({
   baseURL: baseURL,
+  withCredentials: true,
 });
 
 export const authapi = axios.create({
@@ -35,10 +36,7 @@ authapi.interceptors.response.use(
       originalRequest._retry = true;
       try {
         // Get refresh token and request new access token
-        const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post(`${baseURL}api/token/refresh/`, {
-          refresh: refreshToken,
-        });
+        const response = await axios.post(`${baseURL}auth/refresh/`);
 
         // Store new access token
         const newAccessToken = response.data.access;
@@ -53,7 +51,6 @@ authapi.interceptors.response.use(
       } catch (err) {
         // If refresh fails, logout
         localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
         window.location.href = "/login";
         return Promise.reject(err);
       }

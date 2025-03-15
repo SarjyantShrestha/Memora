@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { Outlet } from "react-router";
 import memoralogo from "../../assets/Memoralogo.svg";
 import SideMenu from "../Sidemenu";
 import { Search } from "lucide-react";
-import { Input } from "@mantine/core";
-import NoteModal from "../NoteModal";
+import { Input, Button } from "@mantine/core";
+import { useAppContext } from "../../context/Contexts";
 
 const Layout = () => {
+  const { logout } = useAppContext();
   return (
     <div className="flex h-screen bg-white relative">
       {/* Sidebar */}
@@ -26,7 +26,16 @@ const Layout = () => {
             leftSection={<Search size={20} />}
             size="md"
           />
+          <Button
+            variant="outline"
+            color="red"
+            onClick={logout}
+            className="ml-4"
+          >
+            Logout
+          </Button>
         </div>
+        {/* Logout Button */}
       </div>
 
       {/* Main Content Area */}

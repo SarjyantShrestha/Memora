@@ -17,7 +17,7 @@ const Signup = () => {
   const [backendErrors, setBackendErrors] = useState<string[]>([]); // State to store backend errors
   const navigate = useNavigate();
 
-  const { setEmail } = useAppContext();
+  const { setEmail, setIsRegistered } = useAppContext();
 
   const {
     register,
@@ -35,6 +35,7 @@ const Signup = () => {
       const response = await api.post("/auth/register", data);
 
       if (response.status === 201) {
+        setIsRegistered(true);
         navigate("/otp");
       } else {
         throw new Error("Registration failed");
