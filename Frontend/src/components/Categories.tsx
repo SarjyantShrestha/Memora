@@ -37,7 +37,7 @@ const Categories: React.FC<CategoriesProps> = ({ Icon }) => {
         categories.map((category, index) => (
           <div
             key={index}
-            className="flex items-center py-2 px-3 text-black hover:bg-gray-200 cursor-pointer transition-colors duration-200 mb-1"
+            className="flex items-center py-2 px-6 text-black hover:bg-gray-200 cursor-pointer transition-colors duration-200 mb-1"
           >
             {Icon && (
               <Icon size={18} className="mr-3 text-gray-500 flex-shrink-0" />
