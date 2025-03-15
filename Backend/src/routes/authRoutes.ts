@@ -64,6 +64,8 @@ export default router;
  *                 type: string
  *               password:
  *                 type: string
+ *               confirm_password:
+ *                 type: string
  *     responses:
  *       201:
  *         description: User registered successfully

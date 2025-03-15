@@ -84,9 +84,11 @@ export const register = async (req: Request, res: Response) => {
   }
 
   //Check existing username
-  const existingName = await User.findOne({ where: { name } });
+  const existingName = await User.findOne({
+    where: { name: name.toLowerCase() },
+  });
   if (existingName) {
-    res.status(400).json({ message: "User already taken" });
+    res.status(400).json({ message: "Username already taken" });
     return;
   }
 
