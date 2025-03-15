@@ -59,10 +59,10 @@ export const login = async (req: Request, res: Response) => {
     // Store refresh token in an httpOnly cookie (more secure)
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true, // true in production
-      sameSite: "strict",
+      secure: true,
       path: "/api/auth/refresh-token",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      partitioned: true,
     });
 
     res.status(200).json({ accessToken });

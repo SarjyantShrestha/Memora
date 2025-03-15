@@ -15,8 +15,15 @@ import NoteRoutes from "./routes/noteRoutes";
 const port: number = 5000;
 const app = express();
 
+const corsOptions = {
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
 // Middleware setup
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
