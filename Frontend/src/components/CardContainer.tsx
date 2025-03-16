@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import NoteCard from "./NoteModals/NoteCard";
-import { authapi } from "../config/axios";
-import CreateNote from "./NoteModals/CreateNote";
+import NoteManager from "./NoteModals/NoteManager";
+import { useAppContext } from "../context/Contexts";
 
 const CardContainer = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState<any>(null);
-  const [notes, setNotes] = useState<any[]>([]); // Initialize as empty array
+  const { notes, fetchNotes } = useAppContext();
 
   // Open modal to edit an existing note
   const openEditModal = (note: any) => {
@@ -16,38 +16,10 @@ const CardContainer = () => {
     setModalOpen(true);
   };
 
-  // Fetch notes from the backend
-  const fetchNotes = async () => {
-    try {
-      const response = await authapi.get("/notes"); // Update the endpoint as per your API
-      if (response.status === 200) {
-        setNotes(response.data.notes);
-      }
-    } catch (error) {
-      console.error("Error fetching notes:", error);
-    }
-  };
-
   // Fetch notes when the component mounts
   useEffect(() => {
     fetchNotes();
   }, []);
-
-  // Handle save (edit or add)
-  const handleSave = () => {
-    if (isEditing) {
-      // Update existing note
-      setNotes((prevNotes) =>
-        prevNotes.map((note) =>
-          note.title === editedNote.title ? editedNote : note,
-        ),
-      );
-    } else {
-      // Add new note
-      setNotes((prevNotes) => [...prevNotes, editedNote]);
-    }
-    setModalOpen(false);
-  };
 
   return (
     <>
@@ -70,14 +42,12 @@ const CardContainer = () => {
         )}
       </div>
 
-      <CreateNote
+      {/*Form to create/update note*/}
+      <NoteManager
         isFormOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         note={editedNote}
-        setNote={setEditedNote}
-        onSave={handleSave}
         isEditing={isEditing}
-        fetchNotes={fetchNotes}
       />
     </>
   );

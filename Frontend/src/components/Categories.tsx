@@ -8,9 +8,9 @@ interface CategoriesProps {
 
 const Categories = ({ Icon }: CategoriesProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const { fetchedCategories: categories } = useAppContext();
+  const { fetchCategories } = useAppContext();
 
-  if (categories.length === 0) {
+  if (fetchCategories.length === 0) {
     return <></>;
   }
   const handleCategorySelect = (category: string) => {
@@ -25,8 +25,8 @@ const Categories = ({ Icon }: CategoriesProps) => {
           All Notes
         </span>
       </div>
-      {categories &&
-        categories.map((category, index) => (
+      {fetchCategories &&
+        fetchCategories.map((category, index) => (
           <div
             key={index}
             className={`flex items-center py-2 px-6 text-black hover:bg-blue-100 rounded-lg cursor-pointer transition-colors duration-200 mb-1 ${

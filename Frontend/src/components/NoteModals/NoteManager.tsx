@@ -7,24 +7,18 @@ import { authapi } from "../../config/axios";
 interface CreateNoteFormProps {
   isFormOpen: boolean;
   onClose: () => void;
-  note: any;
-  setNote: (note: any) => void;
-  onSave: () => void;
-  isEditing: boolean;
-  fetchNotes: () => void;
+  note?: any; // Make optional
+  isEditing?: boolean; // Make optional
 }
 
-const CreateNote = ({
+const NoteManager = ({
   isFormOpen,
   onClose,
   note,
-  setNote,
-  onSave,
   isEditing,
-  fetchNotes,
 }: CreateNoteFormProps) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const { fetchedCategories } = useAppContext();
+  const { fetchCategories, fetchNotes } = useAppContext();
 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
@@ -80,8 +74,8 @@ const CreateNote = ({
 
         if (response.status === 200) {
           console.log("Note deleted");
-          fetchNotes();
         }
+        fetchNotes();
         onClose();
       } catch (error) {
         console.error("Error deleting note:", error);
@@ -89,16 +83,33 @@ const CreateNote = ({
     }
   };
 
-  const onFormSubmit = (data: any) => {
-    // Update the note object with the form data
-    if (isEditing) {
-      setNote({ ...data, id: note.id });
-    } else {
-      setNote(data);
+  // Handle save or update (create or update)
+  const handleCreateOrUpdate = async (data: any) => {
+    try {
+      if (isEditing) {
+        // Update the existing note
+        const response = await authapi.put(`/notes/${note.id}`, data);
+        if (response.status === 200) {
+          console.log("Note updated successfully");
+          fetchNotes();
+        }
+      } else {
+        // Create a new note
+        const response = await authapi.post("/notes", data);
+        if (response.status === 201) {
+          console.log("Note created successfully");
+          console.log("note fetch after note creation");
+          fetchNotes();
+        }
+      }
+      onClose();
+    } catch (error) {
+      console.error("Error saving/updating note:", error);
     }
+  };
 
-    onSave();
-    onClose();
+  const onFormSubmit = (data: any) => {
+    handleCreateOrUpdate(data);
   };
 
   if (!isFormOpen) return null;
@@ -141,7 +152,7 @@ const CreateNote = ({
               Categories:
             </label>
             <div className="grid grid-cols-2 gap-2 max-h-[150px] overflow-auto">
-              {fetchedCategories.map((category) => (
+              {fetchCategories.map((category) => (
                 <div
                   key={category}
                   onClick={() => handleCategoryToggle(category)}
@@ -206,4 +217,4 @@ const CreateNote = ({
   );
 };
 
-export default CreateNote;
+export default NoteManager;

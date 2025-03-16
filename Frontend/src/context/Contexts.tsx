@@ -8,7 +8,11 @@ import React, {
 import { useNavigate } from "react-router";
 import { authapi } from "../config/axios";
 
-// Define the context type
+// interface Category {
+//   id: number;
+//   name: string;
+// }
+
 interface ContextType {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
@@ -20,9 +24,13 @@ interface ContextType {
   setIsRegistered: React.Dispatch<React.SetStateAction<boolean>>;
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-  fetchedCategories: string[];
-  setFetchedCategories: React.Dispatch<React.SetStateAction<string[]>>;
+  notes: string[];
+  setNotes: React.Dispatch<React.SetStateAction<string[]>>;
+  fetchCategories: string[];
+  setFetchCategories: React.Dispatch<React.SetStateAction<string[]>>;
+
   logout: () => void;
+  fetchNotes: () => void;
 }
 
 // Create the context with a default undefined value
@@ -38,9 +46,11 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [isRegistered, setIsRegistered] = useState<boolean>(false); // Track registration status
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [fetchCategories, setFetchCategories] = useState<string[]>([]);
+  const [notes, setNotes] = useState<any[]>([]);
+
   const navigate = useNavigate();
 
   // Fetch categories after login
@@ -54,7 +64,7 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
             (category: { name: string }) => category.name,
           );
 
-          setCategories(categoryNames);
+          setFetchCategories(categoryNames);
         } catch (error) {
           console.error("Error fetching categories:", error);
         }
@@ -80,6 +90,19 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     navigate("/login"); // Redirect to login page
   };
 
+  //Fetch notes
+  const fetchNotes = async () => {
+    try {
+      const response = await authapi.get("/notes"); // Update the endpoint as per your API
+      if (response.status === 200) {
+        console.log(response.data.notes);
+        setNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
+
   // Create the value object to pass to the provider
   const value: ContextType = {
     email,
@@ -93,8 +116,11 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     setName,
     isAuthenticated,
     setIsAuthenticated,
-    fetchedCategories: categories,
-    setFetchedCategories: setCategories,
+    fetchCategories,
+    setFetchCategories,
+    notes,
+    setNotes,
+    fetchNotes,
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
