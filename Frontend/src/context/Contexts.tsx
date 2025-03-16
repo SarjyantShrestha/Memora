@@ -8,10 +8,19 @@ import React, {
 import { useNavigate } from "react-router";
 import { authapi } from "../config/axios";
 
-// interface Category {
-//   id: number;
-//   name: string;
-// }
+interface Note {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  categories: string[];
+}
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 interface ContextType {
   email: string;
@@ -24,10 +33,10 @@ interface ContextType {
   setIsRegistered: React.Dispatch<React.SetStateAction<boolean>>;
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-  notes: string[];
-  setNotes: React.Dispatch<React.SetStateAction<string[]>>;
-  fetchCategories: string[];
-  setFetchCategories: React.Dispatch<React.SetStateAction<string[]>>;
+  notes: Note[];
+  setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
+  fetchCategories: Category[];
+  setFetchCategories: React.Dispatch<React.SetStateAction<Category[]>>;
 
   logout: () => void;
   fetchNotes: () => void;
@@ -48,7 +57,7 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [fetchCategories, setFetchCategories] = useState<string[]>([]);
+  const [fetchCategories, setFetchCategories] = useState<Category[]>([]);
   const [notes, setNotes] = useState<any[]>([]);
 
   const navigate = useNavigate();
@@ -60,11 +69,13 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
         try {
           const response = await authapi.get("/categories", {});
 
-          const categoryNames = response.data.categories.map(
-            (category: { name: string }) => category.name,
+          const categoryList: Category[] = response.data.categories.map(
+            (category: { id: string; name: string }) => ({
+              id: category.id,
+              name: category.name,
+            }),
           );
-
-          setFetchCategories(categoryNames);
+          setFetchCategories(categoryList);
         } catch (error) {
           console.error("Error fetching categories:", error);
         }

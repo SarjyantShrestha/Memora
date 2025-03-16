@@ -17,19 +17,19 @@ const NoteManager = ({
   note,
   isEditing,
 }: CreateNoteFormProps) => {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const { fetchCategories, fetchNotes } = useAppContext();
 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       title: note?.title || "",
       content: note?.content || "",
-      categories: note?.categories || [],
+      categoryIds: note?.categories || [],
     },
   });
 
   // Watch for changes to the form fields
-  const categories = watch("categories");
+  const categories = watch("categoryIds");
 
   // Prevent body scrolling when modal is open
   useEffect(() => {
@@ -48,18 +48,18 @@ const NoteManager = ({
     if (note) {
       setValue("title", note.title);
       setValue("content", note.content);
-      setValue("categories", note.categories);
+      setValue("categoryIds", note.categories);
     }
   }, [note, setValue]);
 
-  const handleCategoryToggle = (category: string) => {
+  const handleCategoryToggle = (categoryId: number) => {
     setSelectedCategories((prevSelected) => {
-      const newSelected = prevSelected.includes(category)
-        ? prevSelected.filter((c) => c !== category)
-        : [...prevSelected, category];
+      const newSelected = prevSelected.includes(categoryId)
+        ? prevSelected.filter((c) => c !== categoryId)
+        : [...prevSelected, categoryId];
 
-      // Update the form value
-      setValue("categories", newSelected);
+      // Update the form value with the array of category IDs
+      setValue("categoryIds", newSelected);
       return newSelected;
     });
   };
@@ -95,6 +95,7 @@ const NoteManager = ({
         }
       } else {
         // Create a new note
+        console.log(data);
         const response = await authapi.post("/notes", data);
         if (response.status === 201) {
           console.log("Note created successfully");
@@ -154,12 +155,12 @@ const NoteManager = ({
             <div className="grid grid-cols-2 gap-2 max-h-[150px] overflow-auto">
               {fetchCategories.map((category) => (
                 <div
-                  key={category}
-                  onClick={() => handleCategoryToggle(category)}
+                  key={category.id}
+                  onClick={() => handleCategoryToggle(category.id)}
                   className={`
                     flex items-center p-2 border rounded cursor-pointer
                     ${
-                      categories.includes(category)
+                      categories.includes(category.id)
                         ? "border-blue-500 bg-blue-50"
                         : "border-gray-300 hover:bg-gray-50"
                     }
@@ -169,22 +170,22 @@ const NoteManager = ({
                     className={`
                     w-5 h-5 mr-2 flex items-center justify-center rounded border
                     ${
-                      categories.includes(category)
+                      categories.includes(category.id)
                         ? "bg-blue-500 border-blue-500"
                         : "border-gray-400"
                     }
                   `}
                   >
-                    {categories.includes(category) && (
+                    {categories.includes(category.id) && (
                       <Check size={16} color="white" />
                     )}
                   </div>
-                  <span className="text-sm">{category}</span>
+                  <span className="text-sm">{category.name}</span>
                 </div>
               ))}
             </div>
             {/* Hidden input to track selected categories */}
-            <input type="hidden" {...register("categories")} />
+            <input type="hidden" {...register("categoryIds")} />
           </div>
 
           <div className="flex justify-end gap-3 mt-4">

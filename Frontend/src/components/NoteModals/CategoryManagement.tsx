@@ -4,27 +4,41 @@ import { useAppContext } from "../../context/Contexts";
 import { Trash2 } from "lucide-react";
 import { authapi } from "../../config/axios";
 
+interface Category {
+  id: number;
+  name: string;
+}
+
 interface CategoryProps {
   isFormOpen: boolean;
   onClose: () => void;
 }
 
 const CategoryManagement = ({ isFormOpen, onClose }: CategoryProps) => {
-  const { fetchedCategories, setFetchedCategories } = useAppContext();
+  const { fetchCategories, setFetchCategories } = useAppContext();
   const { register, handleSubmit, setValue, reset, watch } = useForm({
     defaultValues: {
       newCategory: "",
-      categories: fetchedCategories || [],
     },
   });
 
+  // Extract category names from fetchCategories
   const [categories, setCategories] = useState<string[]>(
-    fetchedCategories || [],
+    fetchCategories
+      ? fetchCategories.map((category: Category) => category.name)
+      : [],
   );
 
+  const [newCategory, setNewCategory] = useState("");
+
+  // Sync categories from context
   useEffect(() => {
-    setCategories(fetchedCategories); // Sync categories from context
-  }, [fetchedCategories]);
+    setCategories(
+      fetchCategories
+        ? fetchCategories.map((category: Category) => category.name)
+        : [],
+    );
+  }, [fetchCategories]);
 
   useEffect(() => {
     if (isFormOpen) {
@@ -51,10 +65,12 @@ const CategoryManagement = ({ isFormOpen, onClose }: CategoryProps) => {
       });
 
       if (response.status === 201) {
-        const updatedCategories = [...categories, categoryName];
-        setFetchedCategories(updatedCategories);
-        setValue("categories", updatedCategories);
-        setValue("newCategory", "");
+        setCategories((prevCategories) => [...prevCategories, categoryName]);
+        setFetchCategories((prev) => [
+          ...prev,
+          { id: Date.now(), name: categoryName },
+        ]);
+        setNewCategory("");
       }
     } catch (error) {
       console.error("Failed to add category:", error);
@@ -87,7 +103,8 @@ const CategoryManagement = ({ isFormOpen, onClose }: CategoryProps) => {
           <input
             type="text"
             placeholder="Enter new category"
-            {...register("newCategory")}
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
             className="w-full py-2 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
           />
           <button
@@ -112,13 +129,7 @@ const CategoryManagement = ({ isFormOpen, onClose }: CategoryProps) => {
                 <span>{category}</span>
                 <button
                   type="button"
-                  onClick={() => {
-                    const updatedCategories = categories.filter(
-                      (_, i) => i !== index,
-                    );
-                    setCategories(updatedCategories);
-                    setValue("categories", updatedCategories);
-                  }}
+                  onClick={() => deleteCategory(category)}
                   className="text-red-500 hover:text-red-700"
                 >
                   <Trash2 size={18} />
@@ -130,12 +141,22 @@ const CategoryManagement = ({ isFormOpen, onClose }: CategoryProps) => {
           )}
         </ul>
 
-        <button
-          type="submit"
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex mx-auto"
-        >
-          Save Categories
-        </button>
+        <div className="flex justify-end gap-3 mt-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-gray-600 hover:bg-gray-200 py-2 px-4 border border-gray-300 rounded-md cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onFormSubmit}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors cursor-pointer"
+          >
+            Save Categories
+          </button>
+        </div>
       </div>
     </div>
   );

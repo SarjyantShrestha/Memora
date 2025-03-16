@@ -30,15 +30,15 @@ const Categories = ({ Icon }: CategoriesProps) => {
           <div
             key={index}
             className={`flex items-center py-2 px-6 text-black hover:bg-blue-100 rounded-lg cursor-pointer transition-colors duration-200 mb-1 ${
-              selectedCategory === category ? "bg-blue-100" : ""
+              selectedCategory === category.name ? "bg-blue-100" : ""
             }`}
-            onClick={() => handleCategorySelect(category)}
+            onClick={() => handleCategorySelect(category.name)}
           >
             {Icon && (
               <Icon size={18} className="mr-3 text-gray-500 flex-shrink-0" />
             )}
             <span className="overflow-hidden text-md whitespace-nowrap text-ellipsis max-w-[200px]">
-              {category}
+              {category.name}
             </span>
           </div>
         ))}
