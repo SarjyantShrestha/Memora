@@ -1,39 +1,18 @@
 import { useState } from "react";
-import { NotebookPen, Diamond, FolderClosed, Plus, Filter } from "lucide-react";
+import { NotebookPen, FolderClosed } from "lucide-react";
 import Categories from "./Categories";
-import NoteModal from "./NoteModal";
 import { Hash } from "lucide-react";
+import CreateNoteForm from "./NoteModals/CreateNoteForm";
 
 const SideMenu = () => {
-  const [opened, setOpened] = useState(false);
-  const [note, setNote] = useState({
-    title: "",
-    content: "",
-    date: "",
-    category: [],
-  });
-
-  const handleCloseModal = () => setOpened(false);
-  const handleSaveNote = () => {
-    console.log("New note saved:", note);
-    setOpened(false);
-  };
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
     <div className="flex flex-col h-full w-64 py-6 px-4 overflow-hidden">
-      {/* Action Buttons */}
       <div className="space-y-3 mb-8">
         <button
           className="flex items-center justify-center w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm"
-          onClick={() => {
-            setNote({
-              title: "",
-              content: "",
-              date: "",
-              category: [],
-            });
-            setOpened(true);
-          }}
+          onClick={() => setIsFormOpen(true)}
         >
           <NotebookPen size={16} className="mr-2" />
           <span className="font-medium">New Note</span>
@@ -55,14 +34,12 @@ const SideMenu = () => {
         <Categories Icon={Hash} />
       </div>
 
-      {/* Note Modal */}
-      <NoteModal
-        opened={opened}
-        onClose={handleCloseModal}
-        note={note}
-        setNote={setNote}
-        onSave={handleSaveNote}
-      />
+      {isFormOpen && (
+        <CreateNoteForm
+          isFormOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+        />
+      )}
     </div>
   );
 };

@@ -4,9 +4,17 @@ import SideMenu from "../Sidemenu";
 import { Search } from "lucide-react";
 import { Input, Button } from "@mantine/core";
 import { useAppContext } from "../../context/Contexts";
+// import { useAuthCheck } from "../CustomHooks/useAuthCheck";
+// import { Loader2 } from "lucide-react";
 
 const Layout = () => {
   const { logout, name } = useAppContext();
+  // const isChecking = useAuthCheck();
+  //
+  // if (isChecking) {
+  //   return <Loader2 className="animate-spin mr-2" size={20} />;
+  // }
+
   return (
     <div className="flex h-screen bg-white relative">
       {/* Sidebar */}

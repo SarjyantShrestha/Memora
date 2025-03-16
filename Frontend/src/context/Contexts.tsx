@@ -12,6 +12,8 @@ interface ContextType {
   setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
   isRegistered: boolean;
   setIsRegistered: React.Dispatch<React.SetStateAction<boolean>>;
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   logout: () => void;
 }
 
@@ -29,6 +31,7 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [name, setName] = useState<string>("");
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false); // Track registration status
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // // Logout function
@@ -58,6 +61,8 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     logout,
     name,
     setName,
+    isAuthenticated,
+    setIsAuthenticated,
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };

@@ -15,7 +15,8 @@ const Login = () => {
   const [backendErrors, setBackendErrors] = useState<string[]>([]); // State to store backend errors
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { accessToken, setAccessToken, setName } = useAppContext();
+  const { accessToken, setAccessToken, setName, setIsAuthenticated } =
+    useAppContext();
 
   const {
     register,
@@ -33,6 +34,7 @@ const Login = () => {
         const { accessToken } = response.data;
         console.log(accessToken);
         setAccessToken(accessToken);
+        setIsAuthenticated(true);
         localStorage.setItem("accessToken", accessToken);
         //
         // Decode the token and get user info

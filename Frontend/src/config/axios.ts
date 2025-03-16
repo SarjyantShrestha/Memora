@@ -26,7 +26,7 @@ authapi.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Response interceptor to handle cases where the accessToken expires
+// Response interceptor to handle case when the accessToken expires
 authapi.interceptors.response.use(
   (response) => response,
   async (error) => {

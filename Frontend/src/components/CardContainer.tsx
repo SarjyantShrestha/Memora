@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { SimpleGrid, Button } from "@mantine/core";
-import Cards from "./Cards";
 import NoteModal from "./NoteModal";
+import NoteCard from "./NoteModals/NoteCard";
 
 const CardContainer = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -10,7 +9,21 @@ const CardContainer = () => {
   const [notes, setNotes] = useState([
     {
       title: "Meeting Notes",
-      content: "Discussed project roadmap and upcoming deadlines.",
+      content:
+        "Discussed project roadmap and upcoming deadlines. Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.",
+      date: "March 15, 2025",
+      category: ["Work", "Meeting"],
+    },
+    {
+      title: "Shopping List",
+      content: "Milk, eggs, bread, and coffee.",
+      date: "March 14, 2025",
+      category: ["Personal", "Shopping"],
+    },
+    {
+      title: "Meeting Notes",
+      content:
+        "Discussed project roadmap and upcoming deadlines. Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.",
       date: "March 15, 2025",
       category: ["Work", "Meeting"],
     },
@@ -49,9 +62,9 @@ const CardContainer = () => {
 
   return (
     <>
-      <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing="lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {notes.map((note, index) => (
-          <Cards
+          <NoteCard
             key={index}
             title={note.title}
             content={note.content}
@@ -60,7 +73,7 @@ const CardContainer = () => {
             onClick={() => openEditModal(note)}
           />
         ))}
-      </SimpleGrid>
+      </div>
 
       {/* Reusable Modal */}
       <NoteModal
