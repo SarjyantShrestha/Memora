@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Check } from "lucide-react";
 import { useAppContext } from "../../context/Contexts";
+import { authapi } from "../../config/axios";
 
 interface CreateNoteFormProps {
   isFormOpen: boolean;
@@ -10,6 +11,7 @@ interface CreateNoteFormProps {
   setNote: (note: any) => void;
   onSave: () => void;
   isEditing: boolean;
+  fetchNotes: () => void;
 }
 
 const CreateNote = ({
@@ -19,10 +21,10 @@ const CreateNote = ({
   setNote,
   onSave,
   isEditing,
+  fetchNotes,
 }: CreateNoteFormProps) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const { fetchedCategories } = useAppContext();
-  console.log(note);
 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
@@ -68,12 +70,31 @@ const CreateNote = ({
     });
   };
 
+  // Handle the delete operation directly in this component
+  const handleDelete = async (e: any) => {
+    e.preventDefault();
+
+    if (note && note.id) {
+      try {
+        const response = await authapi.delete(`/notes/${note.id}`);
+
+        if (response.status === 200) {
+          console.log("Note deleted");
+          fetchNotes();
+        }
+        onClose();
+      } catch (error) {
+        console.error("Error deleting note:", error);
+      }
+    }
+  };
+
   const onFormSubmit = (data: any) => {
     // Update the note object with the form data
     if (isEditing) {
       setNote({ ...data, id: note.id });
     } else {
-      setNote(data); // For new note
+      setNote(data);
     }
 
     onSave();
@@ -111,7 +132,7 @@ const CreateNote = ({
               placeholder="Write your note..."
               {...register("content")}
               rows={5}
-              className="w-full py-2 bg-transparent border rounded border-gray-300 focus:outline-none focus:border-blue-500 p-2 resize-none"
+              className="w-full py-2 bg-transparent border rounded border-gray-300 focus:outline-none focus:border-blue-500 p-2 resize-none h-[300px]"
             />
           </div>
 
@@ -163,11 +184,20 @@ const CreateNote = ({
             >
               Cancel
             </button>
+            {isEditing && (
+              <button
+                type="button"
+                className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-colors cursor-pointer"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            )}
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors cursor-pointer"
             >
-              Save
+              {isEditing ? "Update" : "Create"}
             </button>
           </div>
         </form>

@@ -21,7 +21,6 @@ const CardContainer = () => {
     try {
       const response = await authapi.get("/notes"); // Update the endpoint as per your API
       if (response.status === 200) {
-        console.log(response.data.notes);
         setNotes(response.data.notes);
       }
     } catch (error) {
@@ -78,6 +77,7 @@ const CardContainer = () => {
         setNote={setEditedNote}
         onSave={handleSave}
         isEditing={isEditing}
+        fetchNotes={fetchNotes}
       />
     </>
   );
