@@ -10,7 +10,7 @@ const NoteCard = ({ title, content, date, category, onClick }: CardProps) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white shadow-md rounded-md border border-gray-300 p-4 cursor-pointer hover:shadow-lg transition"
+      className="bg-white shadow-md rounded-md border border-gray-300 p-4 cursor-pointer hover:shadow-lg transition flex flex-col h-full"
     >
       {/* Title */}
       <h3 className="text-lg font-semibold">{title}</h3>
@@ -22,7 +22,7 @@ const NoteCard = ({ title, content, date, category, onClick }: CardProps) => {
       </p>
 
       {/* Categories */}
-      <div className="flex flex-wrap gap-2 mt-3">
+      <div className="flex flex-wrap gap-2 my-3">
         {category.map((cat, index) => (
           <span
             key={index}
@@ -34,7 +34,7 @@ const NoteCard = ({ title, content, date, category, onClick }: CardProps) => {
       </div>
 
       {/* Date */}
-      <p className="text-xs text-gray-500 mt-3">{date}</p>
+      <p className="text-xs text-gray-500 mt-auto">{date}</p>
     </div>
   );
 };

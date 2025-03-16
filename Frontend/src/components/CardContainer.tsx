@@ -1,39 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NoteModal from "./NoteModal";
 import NoteCard from "./NoteModals/NoteCard";
+import { authapi } from "../config/axios";
 
 const CardContainer = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState<any>(null);
-  const [notes, setNotes] = useState([
-    {
-      title: "Meeting Notes",
-      content:
-        "Discussed project roadmap and upcoming deadlines. Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.",
-      date: "March 15, 2025",
-      category: ["Work", "Meeting"],
-    },
-    {
-      title: "Shopping List",
-      content: "Milk, eggs, bread, and coffee.",
-      date: "March 14, 2025",
-      category: ["Personal", "Shopping"],
-    },
-    {
-      title: "Meeting Notes",
-      content:
-        "Discussed project roadmap and upcoming deadlines. Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.Discussed project roadmap and upcoming deadlines.",
-      date: "March 15, 2025",
-      category: ["Work", "Meeting"],
-    },
-    {
-      title: "Shopping List",
-      content: "Milk, eggs, bread, and coffee.",
-      date: "March 14, 2025",
-      category: ["Personal", "Shopping"],
-    },
-  ]);
+  const [notes, setNotes] = useState<any[]>([]); // Initialize as empty array
 
   // Open modal to edit an existing note
   const openEditModal = (note: any) => {
@@ -42,7 +16,23 @@ const CardContainer = () => {
     setModalOpen(true);
   };
 
-  // Open modal for adding a new note
+  // Fetch notes from the backend
+  const fetchNotes = async () => {
+    try {
+      const response = await authapi.get("/notes"); // Update the endpoint as per your API
+      if (response.status === 200) {
+        console.log(response.data.notes);
+        setNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
+
+  // Fetch notes when the component mounts
+  useEffect(() => {
+    fetchNotes();
+  }, []);
 
   // Handle save (edit or add)
   const handleSave = () => {
@@ -63,13 +53,13 @@ const CardContainer = () => {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {notes.map((note, index) => (
+        {notes.map((note) => (
           <NoteCard
-            key={index}
+            key={note.id} // Use `id` as the unique key
             title={note.title}
             content={note.content}
-            date={note.date}
-            category={note.category}
+            date={new Date(note.createdAt).toLocaleDateString()} // Format the `createdAt` date
+            category={note.categories || []} // Ensure categories exist (you can update your backend to send categories)
             onClick={() => openEditModal(note)}
           />
         ))}
