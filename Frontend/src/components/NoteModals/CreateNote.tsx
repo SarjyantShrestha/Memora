@@ -6,17 +6,29 @@ import { useAppContext } from "../../context/Contexts";
 interface CreateNoteFormProps {
   isFormOpen: boolean;
   onClose: () => void;
+  note: any;
+  setNote: (note: any) => void;
+  onSave: () => void;
+  isEditing: boolean;
 }
 
-const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
+const CreateNote = ({
+  isFormOpen,
+  onClose,
+  note,
+  setNote,
+  onSave,
+  isEditing,
+}: CreateNoteFormProps) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const { fetchedCategories } = useAppContext();
+  console.log(note);
 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
-      title: "",
-      content: "",
-      categories: [] as string[],
+      title: note?.title || "",
+      content: note?.content || "",
+      categories: note?.categories || [],
     },
   });
 
@@ -35,6 +47,15 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
     };
   }, [isFormOpen]);
 
+  // Ensure form fields are updated if note is fetched after initial render
+  useEffect(() => {
+    if (note) {
+      setValue("title", note.title);
+      setValue("content", note.content);
+      setValue("categories", note.categories);
+    }
+  }, [note, setValue]);
+
   const handleCategoryToggle = (category: string) => {
     setSelectedCategories((prevSelected) => {
       const newSelected = prevSelected.includes(category)
@@ -48,8 +69,14 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
   };
 
   const onFormSubmit = (data: any) => {
-    console.log("Form Data:", data);
-    // Here you would handle saving the note with the selected categories
+    // Update the note object with the form data
+    if (isEditing) {
+      setNote({ ...data, id: note.id });
+    } else {
+      setNote(data); // For new note
+    }
+
+    onSave();
     onClose();
   };
 
@@ -57,14 +84,16 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex justify-center items-center transition-all duration-300 ease-in-out text-gray-600"
+      className="fixed inset-0 bg-black/50 flex justify-center items-center transition-all duration-300 ease-in-out text-gray-600 z-50"
       onClick={onClose}
     >
       <div
         className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mx-4 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-2xl font-semibold text-black mb-4">Create Note</h2>
+        <h2 className="text-2xl font-semibold text-black mb-4">
+          {isEditing ? "Edit Note" : "Create Note"}
+        </h2>
         <form onSubmit={handleSubmit(onFormSubmit)}>
           <div className="mb-6">
             <input
@@ -147,4 +176,4 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
   );
 };
 
-export default CreateNoteForm;
+export default CreateNote;

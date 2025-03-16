@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NotebookPen, FolderClosed } from "lucide-react";
 import Categories from "./Categories";
 import { Hash } from "lucide-react";
-import CreateNoteForm from "./NoteModals/CreateNote";
+import CreateNote from "./NoteModals/CreateNote";
 import CategoryManagement from "./NoteModals/CategoryManagement";
 
 const SideMenu = () => {
@@ -40,7 +40,7 @@ const SideMenu = () => {
       </div>
 
       {isFormOpen && (
-        <CreateNoteForm
+        <CreateNote
           isFormOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
         />

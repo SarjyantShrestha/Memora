@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import NoteModal from "./NoteModal";
 import NoteCard from "./NoteModals/NoteCard";
 import { authapi } from "../config/axios";
+import CreateNote from "./NoteModals/CreateNote";
 
 const CardContainer = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -53,25 +53,31 @@ const CardContainer = () => {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {notes.map((note) => (
-          <NoteCard
-            key={note.id} // Use `id` as the unique key
-            title={note.title}
-            content={note.content}
-            date={new Date(note.createdAt).toLocaleDateString()} // Format the `createdAt` date
-            category={note.categories || []} // Ensure categories exist (you can update your backend to send categories)
-            onClick={() => openEditModal(note)}
-          />
-        ))}
+        {notes.length > 0 ? (
+          notes.map((note) => (
+            <NoteCard
+              key={note.id}
+              title={note.title}
+              content={note.content}
+              date={new Date(note.createdAt).toLocaleDateString()}
+              category={note.categories || []}
+              onClick={() => openEditModal(note)}
+            />
+          ))
+        ) : (
+          <div className="text-center py-10 text-gray-500">
+            No notes found. Create your first note!
+          </div>
+        )}
       </div>
 
-      {/* Reusable Modal */}
-      <NoteModal
-        opened={modalOpen}
+      <CreateNote
+        isFormOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         note={editedNote}
         setNote={setEditedNote}
         onSave={handleSave}
+        isEditing={isEditing}
       />
     </>
   );
