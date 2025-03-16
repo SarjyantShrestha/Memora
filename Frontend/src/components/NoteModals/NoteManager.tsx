@@ -22,9 +22,9 @@ const NoteManager = ({
 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
-      title: note?.title || "",
-      content: note?.content || "",
-      categoryIds: note?.categories || [],
+      title: "",
+      content: "",
+      categoryIds: [],
     },
   });
 
@@ -43,14 +43,28 @@ const NoteManager = ({
     };
   }, [isFormOpen]);
 
-  // Ensure form fields are updated if note is fetched after initial render
+  // Initialize form fields when a note is provided
   useEffect(() => {
     if (note) {
-      setValue("title", note.title);
-      setValue("content", note.content);
-      setValue("categoryIds", note.categories);
+      setValue("title", note.title || "");
+      setValue("content", note.content || "");
+
+      // Map category names to category IDs
+      if (note.categories && fetchCategories.length > 0) {
+        const categoryIds = note.categories
+          .map((categoryName: string) => {
+            const category = fetchCategories.find(
+              (cat) => cat.name === categoryName,
+            );
+            return category ? category.id : null;
+          })
+          .filter((id: number) => id !== null);
+
+        setValue("categoryIds", categoryIds);
+        setSelectedCategories(categoryIds);
+      }
     }
-  }, [note, setValue]);
+  }, [note, fetchCategories, setValue]);
 
   const handleCategoryToggle = (categoryId: number) => {
     setSelectedCategories((prevSelected) => {
