@@ -1,26 +1,14 @@
 import { useState } from "react";
 import { LucideIcon } from "lucide-react";
+import { useAppContext } from "../context/Contexts";
 
 interface CategoriesProps {
   Icon?: LucideIcon;
 }
 
 const Categories = ({ Icon }: CategoriesProps) => {
-  const categories: string[] = [
-    "Technology",
-    "Science",
-    "Health",
-    "Education",
-    "Business",
-    "Sports",
-    "Music",
-    "Art",
-    "Travel",
-    "Food",
-    "Fashion",
-    "Lifestyle",
-  ];
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { fetchedCategories: categories } = useAppContext();
 
   if (categories.length === 0) {
     return <></>;
@@ -49,7 +37,7 @@ const Categories = ({ Icon }: CategoriesProps) => {
             {Icon && (
               <Icon size={18} className="mr-3 text-gray-500 flex-shrink-0" />
             )}
-            <span className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[200px]">
+            <span className="overflow-hidden text-md whitespace-nowrap text-ellipsis max-w-[200px]">
               {category}
             </span>
           </div>

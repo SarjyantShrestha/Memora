@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Check } from "lucide-react";
+import { useAppContext } from "../../context/Contexts";
 
 interface CreateNoteFormProps {
   isFormOpen: boolean;
@@ -9,6 +10,7 @@ interface CreateNoteFormProps {
 
 const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const { fetchedCategories } = useAppContext();
 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
@@ -53,27 +55,9 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
 
   if (!isFormOpen) return null;
 
-  const categoryOptions = [
-    "Work",
-    "Personal",
-    "Meeting",
-    "Shopping",
-    "Fitness",
-    "Health",
-    "Education",
-    "Finance",
-    "Travel",
-    "Family",
-    "Hobbies",
-    "Projects",
-    "Goals",
-    "Ideas",
-    "Events",
-  ];
-
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 transition-all duration-300 ease-in-out text-gray-600"
+      className="fixed inset-0 bg-black/50 flex justify-center items-center transition-all duration-300 ease-in-out text-gray-600"
       onClick={onClose}
     >
       <div
@@ -107,7 +91,7 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
               Categories:
             </label>
             <div className="grid grid-cols-2 gap-2 max-h-[150px] overflow-auto">
-              {categoryOptions.map((category) => (
+              {fetchedCategories.map((category) => (
                 <div
                   key={category}
                   onClick={() => handleCategoryToggle(category)}
@@ -134,7 +118,7 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
                       <Check size={16} color="white" />
                     )}
                   </div>
-                  <span>{category}</span>
+                  <span className="text-sm">{category}</span>
                 </div>
               ))}
             </div>
@@ -146,13 +130,13 @@ const CreateNoteForm = ({ isFormOpen, onClose }: CreateNoteFormProps) => {
             <button
               type="button"
               onClick={onClose}
-              className="text-gray-600 hover:text-gray-800 py-2 px-4 border border-gray-300 rounded-md"
+              className="text-gray-600 hover:bg-gray-200 py-2 px-4 border border-gray-300 rounded-md cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors"
+              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors cursor-pointer"
             >
               Save
             </button>

@@ -36,7 +36,6 @@ const Login = () => {
         setAccessToken(accessToken);
         setIsAuthenticated(true);
         localStorage.setItem("accessToken", accessToken);
-        //
         // Decode the token and get user info
         const decodedToken: any = jwtDecode(accessToken);
         setName(decodedToken.name);

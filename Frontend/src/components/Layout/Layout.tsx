@@ -27,7 +27,7 @@ const Layout = () => {
       </div>
 
       {/* Floating Search Bar */}
-      <div className="absolute top-0 left-0 right-0 px-8 py-[2.2rem] bg-white lg:left-72 lg:right-8 w-[calc(100%-4rem)] lg:w-[calc(100%-18rem)]">
+      <div className="absolute top-0 left-0 right-0 px-8 py-[2.2rem] bg-white lg:left-72 lg:right-8 w-[calc(100%-4rem)] lg:w-[calc(100%-18rem)] z-0">
         <div className="flex items-center justify-center">
           <Input
             placeholder="Search notes..."

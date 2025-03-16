@@ -1,19 +1,27 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 import { useNavigate } from "react-router";
 import { authapi } from "../config/axios";
 
 // Define the context type
 interface ContextType {
   email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
   name: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
   accessToken: string | null;
   setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
   isRegistered: boolean;
   setIsRegistered: React.Dispatch<React.SetStateAction<boolean>>;
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchedCategories: string[];
+  setFetchedCategories: React.Dispatch<React.SetStateAction<string[]>>;
   logout: () => void;
 }
 
@@ -32,9 +40,31 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState<boolean>(false); // Track registration status
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [categories, setCategories] = useState<string[]>([]);
   const navigate = useNavigate();
 
-  // // Logout function
+  // Fetch categories after login
+  useEffect(() => {
+    if (isAuthenticated && accessToken) {
+      const fetchCategories = async () => {
+        try {
+          const response = await authapi.get("/categories", {});
+
+          const categoryNames = response.data.categories.map(
+            (category: { name: string }) => category.name,
+          );
+
+          setCategories(categoryNames);
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+        }
+      };
+
+      fetchCategories();
+    }
+  }, [isAuthenticated, accessToken]); // Only run when authenticated or accessToken changes
+
+  // Logout function
   const logout = async () => {
     localStorage.removeItem("accessToken"); // Remove access token
     try {
@@ -63,6 +93,8 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     setName,
     isAuthenticated,
     setIsAuthenticated,
+    fetchedCategories: categories,
+    setFetchedCategories: setCategories,
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };

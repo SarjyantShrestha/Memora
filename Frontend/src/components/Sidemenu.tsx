@@ -2,10 +2,12 @@ import { useState } from "react";
 import { NotebookPen, FolderClosed } from "lucide-react";
 import Categories from "./Categories";
 import { Hash } from "lucide-react";
-import CreateNoteForm from "./NoteModals/CreateNoteForm";
+import CreateNoteForm from "./NoteModals/CreateNote";
+import CategoryManagement from "./NoteModals/CategoryManagement";
 
 const SideMenu = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [manageCategory, setManageCategory] = useState(false);
 
   return (
     <div className="flex flex-col h-full w-64 py-6 px-4 overflow-hidden">
@@ -18,7 +20,10 @@ const SideMenu = () => {
           <span className="font-medium">New Note</span>
         </button>
 
-        <button className="flex items-center justify-center w-full bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+        <button
+          className="flex items-center justify-center w-full bg-gray-200 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-300 transition-colors duration-200 border-none"
+          onClick={() => setManageCategory(true)}
+        >
           <FolderClosed size={16} className="mr-2" />
           <span className="font-medium">New Category</span>
         </button>
@@ -38,6 +43,13 @@ const SideMenu = () => {
         <CreateNoteForm
           isFormOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
+        />
+      )}
+
+      {manageCategory && (
+        <CategoryManagement
+          isFormOpen={manageCategory}
+          onClose={() => setManageCategory(false)}
         />
       )}
     </div>
