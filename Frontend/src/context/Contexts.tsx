@@ -75,9 +75,11 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const navigate = useNavigate();
 
   // Update fetchNotes when sorting changes
-  // useEffect(() => {
-  //   fetchNotes();
-  // }, [searchQuery, sortBy, orderBy]);
+  useEffect(() => {
+    if (isAuthenticated && accessToken) {
+      fetchNotes();
+    }
+  }, [searchQuery, sortBy, orderBy]);
 
   // Fetch categories after login
   const loadCategories = async () => {

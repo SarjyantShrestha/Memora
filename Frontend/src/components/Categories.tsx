@@ -24,6 +24,7 @@ const Categories = ({ Icon }: CategoriesProps) => {
   return (
     <div className="">
       {/* "All Notes" Button */}
+      {/*
       <div
         className="flex items-center py-2 px-6 text-black font-semibold hover:bg-blue-100 rounded-lg cursor-pointer transition-colors duration-200 mb-1"
         onClick={handleAllNotes}
@@ -32,6 +33,7 @@ const Categories = ({ Icon }: CategoriesProps) => {
           Show All Notes
         </span>
       </div>
+        */}
       {fetchCategories &&
         fetchCategories.map((category, index) => (
           <div
