@@ -78,6 +78,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
     page = 1,
     limit = 10,
     category = "", // Add category filter parameter
+    search = "",
   } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
@@ -86,6 +87,14 @@ export const getAllNotes = async (req: Request, res: Response) => {
     const queryBuilder = Note.createQueryBuilder("note")
       .leftJoinAndSelect("note.categories", "category")
       .where("note.user.id = :userId", { userId });
+
+    // Apply search filter
+    if (search) {
+      queryBuilder.andWhere(
+        "(note.title LIKE :search OR note.content LIKE :search)",
+        { search: `%${search}%` },
+      );
+    }
 
     // Apply category filter
     if (category) {

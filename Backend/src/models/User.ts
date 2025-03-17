@@ -28,11 +28,11 @@ export class User extends BaseEntity {
   @Column({ type: "boolean", default: false })
   isVerified: boolean;
 
-  // One-to-many relationship with Category
+  // One-to-many relationship with Category (A user can have many categories)
   @OneToMany(() => Category, (category) => category.user)
   categories: Category[];
 
-  // One-to-many relationship with Note
+  // One-to-many relationship with Note (A user can have many notes)
   @OneToMany(() => Note, (note) => note.user)
   notes: Note[];
 

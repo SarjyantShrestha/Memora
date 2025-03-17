@@ -74,6 +74,11 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
 
   const navigate = useNavigate();
 
+  // Update fetchNotes when sorting changes
+  // useEffect(() => {
+  //   fetchNotes();
+  // }, [searchQuery, sortBy, orderBy]);
+
   // Fetch categories after login
   const loadCategories = async () => {
     try {
@@ -141,11 +146,6 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error fetching notes:", error);
     }
   };
-
-  // Update fetchNotes when sorting changes
-  useEffect(() => {
-    fetchNotes();
-  }, [searchQuery, sortBy, orderBy]);
 
   // Create the value object to pass to the provider
   const value: ContextType = {

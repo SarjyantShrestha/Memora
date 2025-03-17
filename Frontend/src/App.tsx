@@ -24,6 +24,7 @@ const App = () => {
           </Route>
 
           {/* Private Routes (inside Layout) */}
+
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Layout />}>
               <Route index element={<CardContainer />} />

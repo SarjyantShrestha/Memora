@@ -14,12 +14,12 @@ export const createNoteValidation = [
     .isLength({ min: 5 })
     .withMessage("Content must be at least 5 characters long."),
 
-  body("categoryIds")
-    .optional()
-    .isArray({ min: 1 })
-    .withMessage(
-      "Category IDs must be an array with at least one category ID.",
-    ),
+  // body("categoryIds")
+  //   .optional()
+  //   .isArray({ min: 0 })
+  //   .withMessage(
+  //     "Category IDs must be an array with at least one category ID.",
+  //   ),
   validateRequest,
 ];
 

@@ -19,12 +19,22 @@ export const createCategory = async (req: Request, res: Response) => {
       return;
     }
 
-    // Create category
+    // Check if the category already exists for the current user
+    const existingCategory = await Category.findOne({
+      where: { name, user: { id: userId } },
+    });
+    if (existingCategory) {
+      console.log(`Category name ${name} already exists for user ${userId}`);
+      res.status(400).json({ message: "Category name already exists" });
+      return;
+    }
+
+    // Create the category
     const category = new Category();
     category.name = name;
     category.user = user;
 
-    // Save category
+    // Save the category
     await category.save();
 
     console.log(
@@ -57,7 +67,7 @@ export const getAllCategories = async (req: Request, res: Response) => {
       order: { name: "ASC" },
     });
 
-    if (!categories || categories.length == 0) {
+    if (!categories || categories.length === 0) {
       console.log(`No categories found for user ${userId}`);
       res.status(422).json({ message: "Empty category" });
       return;
@@ -97,6 +107,18 @@ export const updateCategory = async (req: Request, res: Response) => {
       );
       res.status(404).json({ message: "Category not found" });
       return;
+    }
+
+    // Check if the new name already exists for the user
+    if (category.name !== name) {
+      const existingCategory = await Category.findOne({
+        where: { name, user: { id: userId } },
+      });
+      if (existingCategory) {
+        console.log(`Category name ${name} already exists for user ${userId}`);
+        res.status(400).json({ message: "Category name already exists" });
+        return;
+      }
     }
 
     // Update the category
