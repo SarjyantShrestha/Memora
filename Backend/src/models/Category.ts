@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
-  JoinTable,
   BaseEntity,
 } from "typeorm";
 import { User } from "./User";
@@ -26,7 +25,6 @@ export class Category extends BaseEntity {
 
   // Many-to-many relationship with Note (a category can contain many notes)
   @ManyToMany(() => Note, (note) => note.categories)
-  @JoinTable() // Ensure JoinTable is used to define the relation table for many-to-many
   notes: Note[];
 
   @CreateDateColumn()
