@@ -37,7 +37,7 @@ const Layout = () => {
     <div className="flex h-screen bg-white relative">
       {/* Hamburger Menu Button (Mobile Only) */}
       <button
-        className="lg:hidden fixed top-8 left-8 z-30 p-2 rounded-md bg-white shadow-md"
+        className={`${isMobileMenuOpen ? "hidden" : " "} lg:hidden fixed top-8 left-8 z-30 p-2 rounded-md bg-white shadow-md`}
         onClick={toggleMobileMenu}
         aria-label="Toggle menu"
       >
@@ -59,15 +59,6 @@ const Layout = () => {
             />
             Memora
           </h2>
-
-          {/* X button inside the header area for better alignment */}
-          <button
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
-            onClick={toggleMobileMenu}
-            aria-label="Close menu"
-          >
-            <X size={24} />
-          </button>
         </div>
 
         <SideMenu />
