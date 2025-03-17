@@ -17,9 +17,9 @@ const Categories = ({ Icon }: CategoriesProps) => {
     setSelectedCategory(category);
   };
 
-  const handleAllNotes = () => {
-    setSelectedCategory(null);
-  };
+  // const handleAllNotes = () => {
+  //   setSelectedCategory(null);
+  // };
 
   return (
     <div className="">

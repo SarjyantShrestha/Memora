@@ -167,11 +167,12 @@ const NoteManager = ({
               Categories:
             </label>
             <div className="grid grid-cols-2 gap-2 max-h-[150px] overflow-auto">
-              {fetchCategories.map((category) => (
-                <div
-                  key={category.id}
-                  onClick={() => handleCategoryToggle(category.id)}
-                  className={`
+              {fetchCategories.length !== 0 ? (
+                fetchCategories.map((category) => (
+                  <div
+                    key={category.id}
+                    onClick={() => handleCategoryToggle(category.id)}
+                    className={`
                     flex items-center p-2 border rounded cursor-pointer
                     ${
                       categories.includes(category.id)
@@ -179,9 +180,9 @@ const NoteManager = ({
                         : "border-gray-300 hover:bg-gray-50"
                     }
                   `}
-                >
-                  <div
-                    className={`
+                  >
+                    <div
+                      className={`
                     w-5 h-5 mr-2 flex items-center justify-center rounded border
                     ${
                       categories.includes(category.id)
@@ -189,14 +190,17 @@ const NoteManager = ({
                         : "border-gray-400"
                     }
                   `}
-                  >
-                    {categories.includes(category.id) && (
-                      <Check size={16} color="white" />
-                    )}
+                    >
+                      {categories.includes(category.id) && (
+                        <Check size={16} color="white" />
+                      )}
+                    </div>
+                    <span className="text-sm">{category.name}</span>
                   </div>
-                  <span className="text-sm">{category.name}</span>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-sm">Create your categories!</p>
+              )}
             </div>
             {/* Hidden input to track selected categories */}
             <input type="hidden" {...register("categoryIds")} />

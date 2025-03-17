@@ -36,7 +36,7 @@ const CardContainer = () => {
             />
           ))
         ) : (
-          <div className="text-center py-10 text-gray-500">
+          <div className="text-center pt-6 text-gray-500">
             No notes found. Create your first note!
           </div>
         )}

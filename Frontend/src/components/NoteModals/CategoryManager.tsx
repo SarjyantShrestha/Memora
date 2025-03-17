@@ -170,12 +170,12 @@ const CategoryManager = ({ isFormOpen, onClose }: CategoryManagerProps) => {
                 {categories.map((category) => (
                   <li
                     key={category.id}
-                    className="flex justify-between items-center p-3 hover:bg-gray-50"
+                    className="flex justify-between items-center border-none  my-1 p-3 hover:bg-gray-50"
                   >
                     <span>{category.name}</span>
                     <button
                       onClick={() => handleDeleteCategory(category.id)}
-                      className="text-red-500 hover:text-red-700 disabled:text-red-300"
+                      className="text-red-500 hover:text-red-700 disabled:text-red-300 cursor-pointer"
                       disabled={loading}
                       type="button"
                     >

@@ -58,12 +58,12 @@ const Layout = () => {
       </div>
 
       {/* Floating Search Bar */}
-      <div className="absolute top-0 left-0 right-0 px-4 lg:px-8 py-4 lg:py-[2.2rem] bg-white lg:left-80 z-0">
+      <div className="absolute top-6 lg:top-8 left-0 right-0 px-4 lg:px-8 bg-white lg:left-80 z-0">
         {/* Stack everything vertically on mobile, horizontal on larger screens */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-10">
-          <div className="flex justify-center gap-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-center lg:gap-16 gap-1">
+          <div className="flex justify-center gap-4 items-center">
             <button
-              className={`${isMobileMenuOpen ? "hidden" : " "} lg:hidden p-2 rounded-md bg-white shadow-md`}
+              className="lg:hidden p-2 bg-gray-200 rounded-md"
               onClick={toggleMobileMenu}
             >
               <Menu size={24} />
@@ -73,7 +73,7 @@ const Layout = () => {
             <Input
               placeholder="Search notes..."
               leftSection={<Search size={20} />}
-              size="md"
+              size="sm"
               className="w-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
