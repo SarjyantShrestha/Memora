@@ -43,9 +43,11 @@ const Login = () => {
         setTimeout(() => {
           setLoading(false);
           navigate("/");
-        }, 2000);
+        }, 1000);
       }
     } catch (error: any) {
+      setLoading(false);
+
       if (error.response) {
         // If the error is coming from the backend response
         const errorMessage = error.response.data.message;
@@ -156,7 +158,7 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`${loading ? "cursor-not-allowed" : ""} w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
               {loading ? (
                 <div className="flex justify-center">

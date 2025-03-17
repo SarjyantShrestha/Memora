@@ -134,6 +134,9 @@ const Otp = () => {
             </button>
           </form>
           <div className="mt-4 text-center text-sm">
+            <p className="text-gray-500 text-sm mb-2">
+              (Please check spam folder as well)
+            </p>
             <a
               onClick={handleResendOtp}
               className={`${isResendDisabled ? "text-gray-500 cursor-not-allowed" : "text-blue-500 cursor-pointer"}`}
