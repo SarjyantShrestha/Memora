@@ -4,7 +4,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { api } from "../config/axios";
 import { useAppContext } from "../context/Contexts";
 import { Loader2 } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
 
 type Inputs = {
   email: string;
@@ -14,9 +13,9 @@ type Inputs = {
 const Login = () => {
   const [backendErrors, setBackendErrors] = useState<string[]>([]); // State to store backend errors
   const [loading, setLoading] = useState(false);
+  const [loadingScreen, setLoadingScreen] = useState(false);
   const navigate = useNavigate();
-  const { accessToken, setAccessToken, setName, setIsAuthenticated } =
-    useAppContext();
+  const { accessToken, setAccessToken, setIsAuthenticated } = useAppContext();
 
   const {
     register,
@@ -24,73 +23,48 @@ const Login = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (token) {
+      setAccessToken(token);
+      setIsAuthenticated(true);
+      navigate("/", { replace: true }); // Redirect to home if logged in
+    } else {
+      setLoadingScreen(false);
+    }
+  }, [accessToken, setAccessToken, setIsAuthenticated, navigate]);
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log("Login:", data);
     setBackendErrors([]);
     setLoading(true);
+
     try {
       const response = await api.post("/auth/login", data);
       if (response.status === 200) {
         const { accessToken } = response.data;
-        console.log(accessToken);
         setAccessToken(accessToken);
         setIsAuthenticated(true);
         localStorage.setItem("accessToken", accessToken);
-        // Decode the token and get user info
-        const decodedToken: any = jwtDecode(accessToken);
-        setName(decodedToken.name);
 
         setTimeout(() => {
           setLoading(false);
-          navigate("/");
+          navigate("/"); // Redirect to home after login
         }, 1000);
       }
     } catch (error: any) {
       setLoading(false);
-
-      if (error.response) {
-        // If the error is coming from the backend response
-        const errorMessage = error.response.data.message;
-        if (errorMessage) {
-          setBackendErrors([errorMessage]); // Set specific error message from backend
-        } else {
-          setBackendErrors(["An unknown error occurred."]); // If no message is returned
-        }
-      } else if (error.message) {
-        setBackendErrors([error.message]); // If it's a general error
-      }
+      setBackendErrors([error.response?.data?.message || "An error occurred"]);
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      setAccessToken(token);
-    }
-  }, [accessToken, setAccessToken]);
-
-  //Create backend error after 3 seconds
-  useEffect(() => {
-    if (backendErrors.length > 0) {
-      const timer = setTimeout(() => {
-        setBackendErrors([]); // Clear errors after 3 seconds
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [backendErrors]);
-
-  //Check if user is already logged in
-  useEffect(() => {
-    // Check if the access token is in localStorage
-    const token = localStorage.getItem("accessToken");
-
-    // If the token exists, set it in the context and redirect to the home page
-    if (token && !accessToken) {
-      setAccessToken(token);
-      navigate("/", { replace: true });
-    }
-  }, [accessToken, setAccessToken, navigate]);
+  if (loadingScreen) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="animate-spin" size={40} />
+      </div>
+    );
+  }
 
   return (
     <>

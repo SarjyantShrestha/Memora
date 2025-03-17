@@ -3,7 +3,8 @@ import { Navigate, Outlet } from "react-router";
 import { useAppContext } from "../../context/Contexts";
 
 const PrivateRoute = () => {
-  const { accessToken, setAccessToken, setIsAuthenticated } = useAppContext();
+  const { accessToken, setAccessToken, setIsAuthenticated, isAuthenticated } =
+    useAppContext();
 
   //If accessToken is valid then set accessToken
   useEffect(() => {
@@ -14,6 +15,7 @@ const PrivateRoute = () => {
     }
   }, [accessToken, setAccessToken]);
 
+  console.log(isAuthenticated);
   // If no accessToken, redirect to the login page
   if (!accessToken && !localStorage.getItem("accessToken")) {
     return <Navigate to="/login" replace />;

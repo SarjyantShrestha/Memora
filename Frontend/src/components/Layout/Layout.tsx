@@ -1,11 +1,11 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router";
 import memoralogo from "../../assets/Memoralogo.svg";
 import SideMenu from "../Sidemenu";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input, Button, Select } from "@mantine/core";
 import { useAppContext } from "../../context/Contexts";
-// import { useAuthCheck } from "../CustomHooks/useAuthCheck";
-// import { Loader2 } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
 
 const Layout = () => {
   const {
@@ -17,13 +17,16 @@ const Layout = () => {
     setOrderBy,
     searchQuery,
     setSearchQuery,
+    setName,
   } = useAppContext();
 
-  // const isChecking = useAuthCheck();
-  //
-  // if (isChecking) {
-  //   return <Loader2 className="animate-spin mr-2" size={20} />;
-  // }
+  const accessToken = localStorage.getItem("accessToken");
+  const decodedToken: any = accessToken ? jwtDecode(accessToken) : null;
+  useEffect(() => {
+    if (decodedToken?.name) {
+      setName(decodedToken.name);
+    }
+  }, [decodedToken, setName]);
 
   return (
     <div className="flex h-screen bg-white relative">
@@ -69,8 +72,8 @@ const Layout = () => {
           <div className="ml-auto">
             {/*Display username*/}
             {name && (
-              <span className="mr-8 text-gray-700 uppercase font-semibold">
-                {name}
+              <span className="mr-8 text-gray-700 font-semibold">
+                Hello, {name}
               </span>
             )}
             <Button color="red" onClick={logout} className="ml-auto">
