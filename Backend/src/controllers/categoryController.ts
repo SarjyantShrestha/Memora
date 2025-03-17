@@ -52,7 +52,10 @@ export const getAllCategories = async (req: Request, res: Response) => {
   console.log(`User with ID ${userId} is fetching their categories`);
 
   try {
-    const categories = await Category.find({ where: { user: { id: userId } } });
+    const categories = await Category.find({
+      where: { user: { id: userId } },
+      order: { name: "ASC" },
+    });
 
     if (!categories || categories.length == 0) {
       console.log(`No categories found for user ${userId}`);

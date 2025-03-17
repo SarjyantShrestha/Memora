@@ -110,7 +110,9 @@ export const getAllNotes = async (req: Request, res: Response) => {
     // Format response
     const formattedNotes = notes.map((note) => ({
       ...note,
-      categories: note.categories.map((category) => category.name),
+      categories: note.categories
+        .map((category) => category.name)
+        .sort((a, b) => a.localeCompare(b)), // sort category alphabetically
     }));
 
     res.status(200).json({ notes: formattedNotes });
