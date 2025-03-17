@@ -40,6 +40,13 @@ interface ContextType {
   loadCategories: () => void;
   logout: () => void;
   fetchNotes: () => void;
+  // Sorting states
+  sortBy: string;
+  setSortBy: React.Dispatch<React.SetStateAction<string>>;
+  orderBy: string;
+  setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Create the context with a default undefined value
@@ -59,6 +66,11 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [fetchCategories, setFetchCategories] = useState<Category[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
+
+  //For sorting
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [orderBy, setOrderBy] = useState("DESC");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
@@ -110,9 +122,17 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   //Fetch notes
-  const fetchNotes = async () => {
+  const fetchNotes = async (filters = {}) => {
     try {
-      const response = await authapi.get("/notes"); // Update the endpoint as per your API
+      const response = await authapi.get("/notes", {
+        params: {
+          sortBy: sortBy || "createdAt", // Default to 'createdAt'
+          orderBy: orderBy || "DESC", // Default to 'DESC'
+          search: searchQuery || "",
+          ...filters, // Allow additional filters like category and search
+        },
+      });
+
       if (response.status === 200) {
         console.log(response.data.notes);
         setNotes(response.data.notes);
@@ -121,6 +141,11 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error fetching notes:", error);
     }
   };
+
+  // Update fetchNotes when sorting changes
+  useEffect(() => {
+    fetchNotes();
+  }, [searchQuery, sortBy, orderBy]);
 
   // Create the value object to pass to the provider
   const value: ContextType = {
@@ -141,6 +166,12 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     setNotes,
     fetchNotes,
     loadCategories,
+    sortBy,
+    setSortBy,
+    orderBy,
+    setOrderBy,
+    searchQuery,
+    setSearchQuery,
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };

@@ -1,14 +1,24 @@
 import { Outlet } from "react-router";
 import memoralogo from "../../assets/Memoralogo.svg";
 import SideMenu from "../Sidemenu";
-import { Search } from "lucide-react";
-import { Input, Button } from "@mantine/core";
+import { Search, Filter } from "lucide-react";
+import { Input, Button, Select } from "@mantine/core";
 import { useAppContext } from "../../context/Contexts";
 // import { useAuthCheck } from "../CustomHooks/useAuthCheck";
 // import { Loader2 } from "lucide-react";
 
 const Layout = () => {
-  const { logout, name } = useAppContext();
+  const {
+    logout,
+    name,
+    sortBy,
+    orderBy,
+    setSortBy,
+    setOrderBy,
+    searchQuery,
+    setSearchQuery,
+  } = useAppContext();
+
   // const isChecking = useAuthCheck();
   //
   // if (isChecking) {
@@ -33,7 +43,28 @@ const Layout = () => {
             placeholder="Search notes..."
             leftSection={<Search size={20} />}
             size="md"
-            className="ml-auto"
+            className="ml-8 w-sm"
+            value={searchQuery} // Bind it to the searchQuery state
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <p className="ml-10 mr-2">SortBy:</p>
+          <Select
+            value={sortBy}
+            onChange={(value) => setSortBy(value ?? "createdAt")}
+            data={[
+              { value: "createdAt", label: "Date Created" },
+              { value: "title", label: "Title" },
+            ]}
+            className=""
+          />
+          <Select
+            value={orderBy}
+            onChange={(value) => setOrderBy(value ?? "DESC")}
+            data={[
+              { value: "ASC", label: "Ascending" },
+              { value: "DESC", label: "Descending" },
+            ]}
+            className="ml-2"
           />
           <div className="ml-auto">
             {/*Display username*/}
