@@ -36,13 +36,6 @@ const Layout = () => {
   return (
     <div className="flex h-screen bg-white relative">
       {/* Hamburger Menu Button (Mobile Only) */}
-      <button
-        className={`${isMobileMenuOpen ? "hidden" : " "} lg:hidden fixed top-8 left-8 z-30 p-2 rounded-md bg-white shadow-md`}
-        onClick={toggleMobileMenu}
-        aria-label="Toggle menu"
-      >
-        <Menu size={24} />
-      </button>
 
       {/* Sidebar - Desktop (always visible) & Mobile (conditionally visible with animation) */}
       <div
@@ -67,44 +60,48 @@ const Layout = () => {
       {/* Floating Search Bar */}
       <div className="absolute top-0 left-0 right-0 px-4 lg:px-8 py-4 lg:py-[2.2rem] bg-white lg:left-80 z-0">
         {/* Stack everything vertically on mobile, horizontal on larger screens */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          {/* Search input - full width on all screens */}
-          <div className="">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-10">
+          <div className="flex justify-center gap-4">
+            <button
+              className={`${isMobileMenuOpen ? "hidden" : " "} lg:hidden p-2 rounded-md bg-white shadow-md`}
+              onClick={toggleMobileMenu}
+            >
+              <Menu size={24} />
+            </button>
+
+            {/* Search input - full width on all screens */}
             <Input
               placeholder="Search notes..."
               leftSection={<Search size={20} />}
               size="md"
-              className="w-sm"
+              className="w-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           {/* Sort controls - row on mobile, but flex wrapped */}
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-medium mr-2">SortBy:</p>
-            <div className="flex flex-wrap gap-2 flex-grow">
-              <Select
-                value={sortBy}
-                onChange={(value) => setSortBy(value ?? "createdAt")}
-                data={[
-                  { value: "createdAt", label: "Date Created" },
-                  { value: "title", label: "Title" },
-                ]}
-                size="sm"
-                className="min-w-[120px]"
-              />
-              <Select
-                value={orderBy}
-                onChange={(value) => setOrderBy(value ?? "DESC")}
-                data={[
-                  { value: "ASC", label: "Ascending" },
-                  { value: "DESC", label: "Descending" },
-                ]}
-                size="sm"
-                className="min-w-[120px]"
-              />
-            </div>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Select
+              value={sortBy}
+              onChange={(value) => setSortBy(value ?? "createdAt")}
+              data={[
+                { value: "createdAt", label: "Date" },
+                { value: "title", label: "Title" },
+              ]}
+              size="sm"
+              className="w-24"
+            />
+            <Select
+              value={orderBy}
+              onChange={(value) => setOrderBy(value ?? "DESC")}
+              data={[
+                { value: "ASC", label: "ASC" },
+                { value: "DESC", label: "DES" },
+              ]}
+              size="sm"
+              className="w-24"
+            />
           </div>
 
           {/* User info and logout - always at the bottom on mobile, right-aligned on larger screens */}
