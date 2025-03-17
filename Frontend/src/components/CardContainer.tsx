@@ -7,7 +7,7 @@ const CardContainer = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState<any>(null);
-  const { notes, fetchNotes } = useAppContext();
+  const { notes, fetchNotes, fetchCategories } = useAppContext();
 
   // Open modal to edit an existing note
   const openEditModal = (note: any) => {
@@ -19,7 +19,7 @@ const CardContainer = () => {
   // Fetch notes when the component mounts
   useEffect(() => {
     fetchNotes();
-  }, []);
+  }, [fetchCategories]);
 
   return (
     <>

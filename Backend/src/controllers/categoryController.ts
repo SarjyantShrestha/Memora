@@ -59,7 +59,7 @@ export const getAllCategories = async (req: Request, res: Response) => {
 
     if (!categories || categories.length == 0) {
       console.log(`No categories found for user ${userId}`);
-      res.status(400).json({ message: "No categories found." });
+      res.status(422).json({ message: "Empty category" });
       return;
     }
 

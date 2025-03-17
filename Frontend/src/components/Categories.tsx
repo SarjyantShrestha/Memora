@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LucideIcon } from "lucide-react";
 import { useAppContext } from "../context/Contexts";
 
@@ -17,12 +17,19 @@ const Categories = ({ Icon }: CategoriesProps) => {
     setSelectedCategory(category);
   };
 
+  const handleAllNotes = () => {
+    setSelectedCategory(null);
+  };
+
   return (
     <div className="">
       {/* "All Notes" Button */}
-      <div className="flex items-center py-2 px-6 text-black font-semibold hover:bg-blue-100 rounded-lg cursor-pointer transition-colors duration-200 mb-1">
+      <div
+        className="flex items-center py-2 px-6 text-black font-semibold hover:bg-blue-100 rounded-lg cursor-pointer transition-colors duration-200 mb-1"
+        onClick={handleAllNotes}
+      >
         <span className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[200px]">
-          All Notes
+          Show All Notes
         </span>
       </div>
       {fetchCategories &&

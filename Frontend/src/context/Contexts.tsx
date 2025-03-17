@@ -37,7 +37,7 @@ interface ContextType {
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   fetchCategories: Category[];
   setFetchCategories: React.Dispatch<React.SetStateAction<Category[]>>;
-
+  loadCategories: () => void;
   logout: () => void;
   fetchNotes: () => void;
 }
@@ -58,30 +58,38 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [fetchCategories, setFetchCategories] = useState<Category[]>([]);
-  const [notes, setNotes] = useState<any[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
   const navigate = useNavigate();
 
   // Fetch categories after login
+  const loadCategories = async () => {
+    try {
+      const response = await authapi.get("/categories");
+
+      // Check if response status is 422
+      if (response.status === 422) {
+        setFetchCategories([]); // Clear categories if status is 422
+        console.error("Error fetching categories: Empty category list");
+        return;
+      }
+
+      const categoryList: Category[] = response.data.categories.map(
+        (category: { id: string; name: string }) => ({
+          id: category.id,
+          name: category.name,
+        }),
+      );
+      setFetchCategories(categoryList);
+    } catch (error: any) {
+      setFetchCategories([]);
+
+      console.error("Error fetching categories:", error.response.data.message);
+    }
+  };
   useEffect(() => {
     if (isAuthenticated && accessToken) {
-      const fetchCategories = async () => {
-        try {
-          const response = await authapi.get("/categories", {});
-
-          const categoryList: Category[] = response.data.categories.map(
-            (category: { id: string; name: string }) => ({
-              id: category.id,
-              name: category.name,
-            }),
-          );
-          setFetchCategories(categoryList);
-        } catch (error) {
-          console.error("Error fetching categories:", error);
-        }
-      };
-
-      fetchCategories();
+      loadCategories();
     }
   }, [isAuthenticated, accessToken]); // Only run when authenticated or accessToken changes
 
@@ -132,6 +140,7 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     notes,
     setNotes,
     fetchNotes,
+    loadCategories,
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };

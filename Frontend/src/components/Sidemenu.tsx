@@ -3,7 +3,7 @@ import { NotebookPen, FolderClosed } from "lucide-react";
 import Categories from "./Categories";
 import { Hash } from "lucide-react";
 import NoteManager from "./NoteModals/NoteManager";
-import CategoryManagement from "./NoteModals/CategoryManagement";
+import CategoryManager from "./NoteModals/CategoryManager";
 
 const SideMenu = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -49,7 +49,7 @@ const SideMenu = () => {
       )}
 
       {manageCategory && (
-        <CategoryManagement
+        <CategoryManager
           isFormOpen={manageCategory}
           onClose={() => setManageCategory(false)}
         />
