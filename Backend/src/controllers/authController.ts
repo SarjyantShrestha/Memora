@@ -59,7 +59,7 @@ export const login = async (req: Request, res: Response) => {
     // Store refresh token in an httpOnly cookie (more secure)
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       path: "/api/v1/auth/refresh",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       partitioned: true,
@@ -164,7 +164,7 @@ export const logout = (req: Request, res: Response) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
     secure: true,
-    sameSite: "strict",
+    sameSite: "lax",
   });
   res.status(200).json({ message: "Logged out successfully" });
 };

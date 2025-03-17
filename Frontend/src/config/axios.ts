@@ -36,10 +36,16 @@ authapi.interceptors.response.use(
       originalRequest._retry = true;
       try {
         // Get refresh token and request new access token
-        const response = await axios.post(`${baseURL}auth/refresh/`);
+        const response = await axios.post(
+          `${baseURL}/auth/refresh/`,
+          {},
+          {
+            withCredentials: true,
+          },
+        );
 
         // Store new access token
-        const newAccessToken = response.data.access;
+        const newAccessToken = response.data.accessToken;
         localStorage.setItem("accessToken", newAccessToken);
 
         // Update headers with new token
@@ -51,7 +57,7 @@ authapi.interceptors.response.use(
       } catch (err) {
         // If refresh fails, logout
         localStorage.removeItem("accessToken");
-        window.location.href = "/login";
+        // window.location.href = "/login";
         return Promise.reject(err);
       }
     }

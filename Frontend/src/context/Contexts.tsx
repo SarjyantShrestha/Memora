@@ -75,11 +75,13 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const navigate = useNavigate();
 
   // Update fetchNotes when sorting changes
+
   useEffect(() => {
     if (isAuthenticated && accessToken) {
       fetchNotes();
+      loadCategories();
     }
-  }, [searchQuery, sortBy, orderBy]);
+  }, [isAuthenticated, accessToken, searchQuery, sortBy, orderBy]);
 
   // Fetch categories after login
   const loadCategories = async () => {
@@ -106,11 +108,6 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
       console.error("Error fetching categories:", error.response.data.message);
     }
   };
-  useEffect(() => {
-    if (isAuthenticated && accessToken) {
-      loadCategories();
-    }
-  }, [isAuthenticated, accessToken]); // Only run when authenticated or accessToken changes
 
   // Logout function
   const logout = async () => {
