@@ -67,7 +67,7 @@ cd Backend/
 
 ```
 PORT=8000
-FRONTEND_URL=http://localhost:5173
+ORIGIN_URL=http://localhost:5173
 DB_URL=
 JWT_REFRESH_SECRET=
 JWT_SECRET=
