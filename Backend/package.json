@@ -31,7 +31,9 @@
     "typeorm": "0.3.21"
   },
   "scripts": {
-    "start": "nodemon src/index.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "start": "nodemon dist/server.js",
+    "dev": "nodemon src/server.ts",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "bulid": "tsc"
   }
 }
