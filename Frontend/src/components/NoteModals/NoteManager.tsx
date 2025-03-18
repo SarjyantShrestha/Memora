@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Check } from "lucide-react";
 import { useAppContext } from "../../context/Contexts";
@@ -23,7 +23,6 @@ const NoteManager = ({
   note,
   isEditing,
 }: CreateNoteFormProps) => {
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const { fetchCategories, fetchNotes } = useAppContext();
 
   const { register, handleSubmit, setValue, watch } = useForm<NoteFormValues>({
@@ -67,21 +66,17 @@ const NoteManager = ({
           .filter((id: number) => id !== null);
 
         setValue("categoryIds", categoryIds);
-        setSelectedCategories(categoryIds);
       }
     }
   }, [note, fetchCategories, setValue]);
 
   const handleCategoryToggle = (categoryId: number) => {
-    setSelectedCategories((prevSelected) => {
-      const newSelected = prevSelected.includes(categoryId)
-        ? prevSelected.filter((c) => c !== categoryId)
-        : [...prevSelected, categoryId];
+    const newSelected = categories.includes(categoryId)
+      ? categories.filter((c) => c !== categoryId)
+      : [...categories, categoryId];
 
-      // Update the form value with the array of category IDs
-      setValue("categoryIds", newSelected as number[]);
-      return newSelected;
-    });
+    // Update the form value with the array of category IDs
+    setValue("categoryIds", newSelected);
   };
 
   // Handle the delete operation directly in this component
