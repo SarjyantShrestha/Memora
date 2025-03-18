@@ -8,11 +8,7 @@ export const createNoteValidation = [
     .isLength({ min: 3 })
     .withMessage("Title must be at least 3 characters long."),
 
-  body("content")
-    .notEmpty()
-    .withMessage("Content is required.")
-    .isLength({ min: 5 })
-    .withMessage("Content must be at least 5 characters long."),
+  body("content").notEmpty().withMessage("Content is required."),
 
   // body("categoryIds")
   //   .optional()
@@ -64,10 +60,7 @@ export const updateNoteValidation = [
     .isLength({ min: 3 })
     .withMessage("Title must be at least 3 characters long."),
 
-  body("content")
-    .optional()
-    .isLength({ min: 5 })
-    .withMessage("Content must be at least 5 characters long."),
+  body("content").optional(),
 
   body("categoryIds")
     .optional()
