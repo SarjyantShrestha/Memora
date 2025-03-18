@@ -3,12 +3,7 @@ import { validateRequest } from "../validateRequest";
 
 // Create Category Validation
 export const createCategoryValidation = [
-  body("name")
-    .trim()
-    .notEmpty()
-    .withMessage("Category name is required.")
-    .isLength({ min: 3, max: 100 })
-    .withMessage("Category name must be between 3 and 100 characters."),
+  body("name").trim().notEmpty().withMessage("Category name is required."),
   validateRequest,
 ];
 
@@ -17,12 +12,7 @@ export const updateCategoryValidation = [
   param("categoryId")
     .isInt()
     .withMessage("Category ID must be a valid integer."),
-  body("name")
-    .trim()
-    .notEmpty()
-    .withMessage("Category name is required.")
-    .isLength({ min: 3, max: 100 })
-    .withMessage("Category name must be between 3 and 100 characters."),
+  body("name").trim().notEmpty().withMessage("Category name is required."),
   validateRequest,
 ];
 
