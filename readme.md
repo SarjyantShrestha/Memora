@@ -89,7 +89,8 @@ npm i
 ### 3. Run Server
 
 ```
-npm run start:dev
+npm run build
+npm start
 ```
 
 ## Engineering Decisions
