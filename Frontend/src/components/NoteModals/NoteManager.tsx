@@ -14,7 +14,7 @@ interface CreateNoteFormProps {
 interface NoteFormValues {
   title: string;
   content: string;
-  categoryIds: number[]; // ✅ Explicitly define the type
+  categoryIds: number[];
 }
 
 const NoteManager = ({
@@ -25,7 +25,13 @@ const NoteManager = ({
 }: CreateNoteFormProps) => {
   const { fetchCategories, fetchNotes } = useAppContext();
 
-  const { register, handleSubmit, setValue, watch } = useForm<NoteFormValues>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<NoteFormValues>({
     defaultValues: {
       title: "",
       content: "",
@@ -147,20 +153,29 @@ const NoteManager = ({
             <input
               type="text"
               id="title"
-              required
               placeholder="Title"
-              {...register("title")}
+              {...register("title", { required: "Title is required" })}
               className="w-full py-2 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500"
             />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.title.message}
+              </p>
+            )}
           </div>
           <div className="mb-6">
             <textarea
               id="content"
               placeholder="Write your note..."
-              {...register("content")}
+              {...register("content", { required: "Content is required" })}
               rows={5}
               className="w-full py-2 bg-transparent border rounded border-gray-300 focus:outline-none focus:border-blue-500 p-2 resize-none h-[300px]"
             />
+            {errors.content && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.content.message}
+              </p>
+            )}
           </div>
 
           <div className="mb-6">
