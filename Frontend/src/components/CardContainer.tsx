@@ -7,7 +7,7 @@ const CardContainer = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState<any>(null);
-  const { notes, fetchNotes, fetchCategories } = useAppContext();
+  const { notes, fetchNotes, fetchCategories, page } = useAppContext();
 
   // Open modal to edit an existing note
   const openEditModal = (note: any) => {
@@ -19,11 +19,13 @@ const CardContainer = () => {
   // Fetch notes when the component mounts
   useEffect(() => {
     fetchNotes();
-  }, [fetchCategories]);
+  }, [fetchCategories, page]);
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div
+        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6`}
+      >
         {notes.length > 0 ? (
           notes.map((note) => (
             <NoteCard
@@ -36,9 +38,7 @@ const CardContainer = () => {
             />
           ))
         ) : (
-          <div className="text-center pt-6 text-gray-500">
-            No notes found. Create your first note!
-          </div>
+          <div className=" text-gray-500">Create your notes!</div>
         )}
       </div>
 

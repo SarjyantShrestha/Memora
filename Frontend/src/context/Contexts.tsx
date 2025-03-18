@@ -47,6 +47,8 @@ interface ContextType {
   setOrderBy: React.Dispatch<React.SetStateAction<string>>;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // Create the context with a default undefined value
@@ -66,6 +68,7 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [fetchCategories, setFetchCategories] = useState<Category[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
+  const [page, setPage] = useState<number>(1);
 
   //For sorting
   const [sortBy, setSortBy] = useState("createdAt");
@@ -126,14 +129,15 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   };
 
   //Fetch notes
-  const fetchNotes = async (filters = {}) => {
+  const fetchNotes = async () => {
     try {
       const response = await authapi.get("/notes", {
         params: {
           sortBy: sortBy || "createdAt", // Default to 'createdAt'
           orderBy: orderBy || "DESC", // Default to 'DESC'
           search: searchQuery || "",
-          ...filters, // Allow additional filters like category and search
+          page: page || 1,
+          // ...filters, // Allow additional filters like category and search
         },
       });
 
@@ -171,6 +175,8 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
     setOrderBy,
     searchQuery,
     setSearchQuery,
+    page,
+    setPage,
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
