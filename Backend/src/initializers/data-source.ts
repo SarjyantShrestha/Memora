@@ -12,7 +12,7 @@ dotenv.config();
 export const AppDataSource = new DataSource({
   type: "postgres",
   url: process.env.DB_URL,
-  synchronize: false,
+  synchronize: true,
   logging: false,
   entities: ["src/models/**/*.ts"],
   migrations: ["src/migrations/**/*.ts"],
