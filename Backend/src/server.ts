@@ -15,7 +15,7 @@ const port: number = Number(process.env.PORT) || 5000;
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.ORIGIN_URL,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   credentials: true,
