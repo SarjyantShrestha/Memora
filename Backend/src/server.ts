@@ -13,10 +13,11 @@ import NoteRoutes from "./routes/noteRoutes";
 
 const port: number = Number(process.env.PORT) || 5000;
 const app = express();
+console.log(process.env.FRONTEND_URL);
 
 const corsOptions = {
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: process.env.FRONTEND_URL,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   credentials: true,
 };
