@@ -11,6 +11,12 @@ interface CreateNoteFormProps {
   isEditing?: boolean; // Make optional
 }
 
+interface NoteFormValues {
+  title: string;
+  content: string;
+  categoryIds: number[]; // ✅ Explicitly define the type
+}
+
 const NoteManager = ({
   isFormOpen,
   onClose,
@@ -20,7 +26,7 @@ const NoteManager = ({
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const { fetchCategories, fetchNotes } = useAppContext();
 
-  const { register, handleSubmit, setValue, watch } = useForm({
+  const { register, handleSubmit, setValue, watch } = useForm<NoteFormValues>({
     defaultValues: {
       title: "",
       content: "",
@@ -73,7 +79,7 @@ const NoteManager = ({
         : [...prevSelected, categoryId];
 
       // Update the form value with the array of category IDs
-      setValue("categoryIds", newSelected);
+      setValue("categoryIds", newSelected as number[]);
       return newSelected;
     });
   };

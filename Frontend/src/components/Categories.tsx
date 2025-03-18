@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LucideIcon } from "lucide-react";
 import { useAppContext } from "../context/Contexts";
 

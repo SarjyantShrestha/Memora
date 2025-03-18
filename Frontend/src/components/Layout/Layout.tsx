@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import memoralogo from "../../assets/Memoralogo.svg";
 import SideMenu from "../Sidemenu";
-import { Search, Menu, X } from "lucide-react";
-import { Input, Button, Select } from "@mantine/core";
+import { Search, Menu } from "lucide-react";
+import { Input, Select } from "@mantine/core";
 import { useAppContext } from "../../context/Contexts";
 import { jwtDecode } from "jwt-decode";
 
 const Layout = () => {
   const {
-    logout,
-    name,
     sortBy,
     orderBy,
     setSortBy,
