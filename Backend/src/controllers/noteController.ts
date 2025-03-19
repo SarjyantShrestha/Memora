@@ -91,7 +91,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
     // Apply search filter
     if (search) {
       queryBuilder.andWhere(
-        "(note.title LIKE :search OR note.content LIKE :search)",
+        "(note.title ILIKE :search OR note.content ILIKE :search)",
         { search: `%${search}%` },
       );
     }
