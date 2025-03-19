@@ -30,7 +30,7 @@ const Signup = () => {
     setLoading(true);
     setBackendErrors([]);
     try {
-      console.log("Signup:", data);
+      // console.log("Signup:", data);
       setEmail(data.email);
       const response = await api.post("/auth/register", data);
 
