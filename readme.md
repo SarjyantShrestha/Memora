@@ -9,7 +9,7 @@ This application is built using **ReactJS** (frontend), **ExpressJS** (backend),
 - Hosted on Netlify at [https://memora-notes.netlify.app](https://memora-notes.netlify.app)
 - The app may experience a 50-seconds delay on the first start due to the backend server being hosted on Render's free-tier service.
 
-# Features
+## Features
 
 - **JWT Authentication**: Secure authentication using JSON Web Tokens (JWT).
 - **CRUD for Notes and Categories**: Create, Read, Update, and Delete operations for both notes and categories.
