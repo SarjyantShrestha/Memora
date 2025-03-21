@@ -46,7 +46,7 @@ cd Frontend/
 `Frontend/.env:`
 
 ```
-VITE_BASE_URL=`http://localhost:8000/api/v1`
+VITE_BASE_URL=http://localhost:8000/api/v1
 ```
 
 ### 2. Install packages
