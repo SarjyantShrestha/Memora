@@ -97,9 +97,12 @@ npm i
 ### 3. Run Server
 
 ```
-npm run build
-npm start
+npm run dev
 ```
+
+### 4. API Documentation (Swagger)
+
+You can access swagger docs at: `http://localhost:<PORT>/docs`
 
 ## Engineering Decisions
 
