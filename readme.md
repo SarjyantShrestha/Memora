@@ -46,7 +46,7 @@ cd Frontend/
 `Frontend/.env:`
 
 ```
-VITE_BASE_URL=`http://localhost:8000/api/v1`
+VITE_BASE_URL=http://localhost:8000/api/v1
 ```
 
 ### 2. Install packages
@@ -97,9 +97,12 @@ npm i
 ### 3. Run Server
 
 ```
-npm run build
-npm start
+npm run dev
 ```
+
+### 4. API Documentation (Swagger)
+
+You can access swagger docs at: `http://localhost:<PORT>/docs`
 
 ## Engineering Decisions
 
